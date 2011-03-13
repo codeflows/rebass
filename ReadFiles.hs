@@ -1,7 +1,7 @@
 module ReadFiles (readStatus) where
                              
 import Status
-import System.Time(ClockTime)
+import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)
                 
@@ -11,7 +11,7 @@ readStatus :: Path -> IO File
 readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirectoryStatus path) else (readFileStatus path))
     where
         readFileStatus path = do
-            timestamp <- getModificationTime path
+            timestamp <- getModificationTime path >>= toCalendarTime
             posixFileStatus <- getFileStatus path
             return $ RegularFile path $ FileStatus timestamp (toInteger $ fileSize posixFileStatus)
 
