@@ -5,7 +5,7 @@ import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)
                 
-ignored = [".", "..", ".git"]
+ignored = [".", "..", ".git", ".rebass"]
 
 readStatus :: Path -> IO File
 readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirectoryStatus path) else (readFileStatus path))

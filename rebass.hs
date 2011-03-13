@@ -5,6 +5,6 @@ import Diff
 main = do 
         newStatus <- readStatus $ "."
         oldStatus <- loadStatus
-        -- saveStatus newStatus
         let diff = compareFile oldStatus newStatus
         putStrLn $ show diff
+        saveStatus newStatus        
