@@ -3,7 +3,8 @@ module ReadFiles (readStatus) where
 import Status
 import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
-import System.Posix.Files(getFileStatus, fileSize)
+import System.Posix.Files(getFileStatus, fileSize)                                                              
+import Data.List(sort)
                 
 ignored = [".", "..", ".git", ".rebass"]
 
@@ -19,7 +20,7 @@ readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirect
             contents <- (getDirectoryContents path >>= (readDirectoryContents path))
             return $ Directory path contents                    
 
-        readDirectoryContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ paths
+        readDirectoryContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ sort $ paths
             where
                   realFile path = not $ path `elem` ignored      
                   fullPath path = parent ++ "/" ++ path                               
