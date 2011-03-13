@@ -10,3 +10,6 @@ data File = RegularFile { path :: Path, status :: FileStatus }
             
 data FileStatus = FileStatus { timeStamp :: ClockTime, size :: Integer }                
             deriving (Show)
+
+pathOf (RegularFile path _) = path
+pathOf (Directory   path _) = path
