@@ -1,5 +1,6 @@
 import System.Time(ClockTime)
-import System.Directory(getDirectoryContents, doesDirectoryExist)
+import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
+import System.Posix.Files(getFileStatus, fileSize)
 
 type Path = String    
 
@@ -23,12 +24,14 @@ readDirectoryContents parent paths = sequence $ map readStatus $ map fullPath $ 
           realFile path = not $ path `elem` ignored      
           fullPath path = parent ++ "/" ++ path
           
+readFileStatus :: Path -> IO File
+readFileStatus path = do
+    timestamp <- getModificationTime path
+    posixFileStatus <- getFileStatus path
+    return $ RegularFile path $ FileStatus timestamp (toInteger $ fileSize posixFileStatus)
+          
 readStatus :: Path -> IO File
-readStatus path = do
-    isDir <- doesDirectoryExist path
-    if isDir 
-        then (readDirectoryStatus path) 
-        else (return $ Directory path [])
+readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirectoryStatus path) else (readFileStatus path))
     
 main = do 
         stuffz <- readDirectoryStatus $ "."
