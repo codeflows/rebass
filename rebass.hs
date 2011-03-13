@@ -1,5 +1,5 @@
 import System.Time(ClockTime)
-import System.Directory(getDirectoryContents)
+import System.Directory(getDirectoryContents, doesDirectoryExist)
 
 type Path = String
 
@@ -16,10 +16,17 @@ readDirectoryStatus path = do
     return $ Directory path contents                    
 
 readContents :: Path -> [Path] -> IO [File]
-readContents parent paths = return $ map simpleFile $ map fullPath $ filter realFile $ paths
-    where simpleFile path = Directory path []                   
+readContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ paths
+    where
           realFile path = not $ path `elem` [".", ".."]      
           fullPath path = parent ++ "/" ++ path
+          
+readStatus :: Path -> IO File
+readStatus path = do
+    isDir <- doesDirectoryExist path
+    if isDir 
+        then (readDirectoryStatus path) 
+        else (return $ Directory path [])
     
 main = do 
         stuffz <- readDirectoryStatus $ "."
