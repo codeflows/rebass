@@ -2,7 +2,7 @@ module Diff where
 
 import Status
 
-data Diff = Added File | Removed File
+data Diff = Added File | Removed File | Replaced File | Updated File
 
 diff :: [File] -> [File] -> [Diff]       
 diff [] [] = []
@@ -17,4 +17,9 @@ diff (old:olds) (new:news)
 
 
 compareFile :: File -> File -> [Diff]
-compareFile old new = []
+compareFile (RegularFile _ _) new@(Directory _ _) = [Replaced new]
+compareFile (Directory _ _) new@(RegularFile _ _) = [Replaced new]   
+compareFile (RegularFile _ oldStatus) new@(RegularFile _ newStatus) 
+    | (oldStatus == newStatus) = []
+    | otherwise                = [Updated new]
+compareFile (Directory _ _) new@(Directory _ _) = []

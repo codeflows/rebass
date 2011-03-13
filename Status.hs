@@ -9,7 +9,7 @@ data File = RegularFile { path :: Path, status :: FileStatus }
             deriving (Show)
             
 data FileStatus = FileStatus { timeStamp :: ClockTime, size :: Integer }                
-            deriving (Show)
+            deriving (Show, Eq)
 
 pathOf (RegularFile path _) = path
 pathOf (Directory   path _) = path
