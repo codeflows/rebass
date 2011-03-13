@@ -1,7 +1,9 @@
 import System.Time(ClockTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist)
 
-type Path = String
+type Path = String    
+
+ignored = [".", "..", ".git"]
 
 data File = RegularFile { path :: Path, status :: FileStatus } 
             | Directory { path :: Path, contents :: [File]}
@@ -12,13 +14,13 @@ data FileStatus = FileStatus { timeStamp :: ClockTime, size :: Integer }
 
 readDirectoryStatus :: Path -> IO File
 readDirectoryStatus path = do      
-    contents <- (getDirectoryContents path >>= (readContents path))
+    contents <- (getDirectoryContents path >>= (readDirectoryContents path))
     return $ Directory path contents                    
 
-readContents :: Path -> [Path] -> IO [File]
-readContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ paths
+readDirectoryContents :: Path -> [Path] -> IO [File]
+readDirectoryContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ paths
     where
-          realFile path = not $ path `elem` [".", ".."]      
+          realFile path = not $ path `elem` ignored      
           fullPath path = parent ++ "/" ++ path
           
 readStatus :: Path -> IO File
