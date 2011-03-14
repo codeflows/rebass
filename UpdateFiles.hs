@@ -11,9 +11,7 @@ updateFiles src dest diffs = do
         mapM_ logAndUpdate diffs
         putStrLn $ "Done"
   where
-        logAndUpdate diff = do 
-            putStrLn $ show diff
-            update diff
+        logAndUpdate diff = (putStrLn $ show diff) >> update diff
         update (Add file) = copyFile (srcPath file) (destPath file)
         update (MkDir dir) = createDirectoryIfMissing True (destPath dir)
         update (Rm path) = handleFileOrDirectory (destPath path) removeFile removeDirectoryRecursive
