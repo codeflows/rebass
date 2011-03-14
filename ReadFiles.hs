@@ -1,4 +1,4 @@
-module ReadFiles (readStatus) where
+module ReadFiles (readStatus, handleFileOrDirectory) where
                              
 import Status
 import System.Time(ClockTime, toCalendarTime)
@@ -9,7 +9,7 @@ import Data.List(sort)
 ignored = [".", "..", ".git", ".gitignore", ".rebass"]
 
 readStatus :: Path -> IO File
-readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirectoryStatus path) else (readFileStatus path))
+readStatus path = handleFileOrDirectory path readFileStatus readDirectoryStatus
     where
         readFileStatus path = do
             timestamp <- getModificationTime path >>= toCalendarTime
@@ -23,4 +23,7 @@ readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirect
         readDirectoryContents parent paths = sequence $ map readStatus $ map fullPath $ filter realFile $ sort $ paths
             where
                   realFile path = not $ path `elem` ignored      
-                  fullPath path = parent ++ "/" ++ path                               
+                  fullPath path = parent ++ "/" ++ path
+                  
+handleFileOrDirectory path fileHandler directoryHandler = 
+    (doesDirectoryExist path) >>= (\dir -> if dir then (directoryHandler path) else (fileHandler path))                  

@@ -24,7 +24,6 @@ rebass ("update" : args) = do
 	oldStatus <- loadStatus
 	let diff = compareFile oldStatus newStatus
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
-	putStrLn $ "Changed since last rebass: " ++ show diff
 	updateFiles "." remote diff
 	saveStatus newStatus        
 
