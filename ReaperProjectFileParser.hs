@@ -4,8 +4,7 @@ module Reaper where
 
 import Text.ParserCombinators.Parsec
 
--- TODO support any non-whitespace parameters
-parameter = many1 letter
+parameter = many1 (noneOf " \n")
 
 parameters = sepBy1 parameter (char ' ')
 
