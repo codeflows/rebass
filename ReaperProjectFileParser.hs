@@ -5,7 +5,7 @@ module Reaper where
 import Text.ParserCombinators.Parsec
 
 data Command = Command String [String] deriving (Show)
-data Node = Node Command deriving (Show)
+data Node = Node Command [Command] deriving (Show)
 
 -- TODO support different types of parameters, e.g. decimal numbers, strings in quotes etc
 parameter = many1 (noneOf " \n")
@@ -33,9 +33,10 @@ command = do
 
 node = do
           char '<'
-          c <- command
+          mainCommand <- command
+          subCommands <- many command
           char '>'
-          return $ Node c
+          return $ Node mainCommand subCommands
 
 parseNode input = parse node "lolcat" input
 
@@ -44,4 +45,3 @@ main = do
           case result of
             Left err  -> print err
             Right xs  -> print xs
-
