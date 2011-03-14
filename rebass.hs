@@ -12,7 +12,7 @@ main = do
 rebass :: [String] -> IO ()	
 
 rebass ("init" : name : args) = do
-	let remote = "~/Dropbox/Rebass/" ++ name
+	remote <- remoteLocationFor name
 	saveRemote remote
 	newStatus <- readStatus "."
 	saveStatus newStatus { contents = [] }

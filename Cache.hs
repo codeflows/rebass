@@ -1,7 +1,7 @@
-module Cache(saveStatus, loadStatus, saveRemote, getRemote) where
+module Cache(saveStatus, loadStatus, saveRemote, getRemote, remoteLocationFor) where
 
 import Status
-import System.Directory(createDirectoryIfMissing)
+import System.Directory(createDirectoryIfMissing, getHomeDirectory)
 
 saveStatus :: File -> IO ()
 saveStatus root = do 
@@ -17,7 +17,13 @@ loadStatus = do
 saveRemote :: String -> IO ()
 saveRemote remote = do
 	createRebassDir
+	createDirectoryIfMissing True remote
+	putStrLn $ "Created directory " ++ remote
 	writeFile remoteConfigFile remote
+	
+remoteLocationFor name = do
+    home <- getHomeDirectory	
+    return $ home ++ "/Dropbox/Rebass/" ++ name
 	
 getRemote = readFile remoteConfigFile	
 
