@@ -12,8 +12,7 @@ main = do
 rebass :: [String] -> IO ()	
 
 rebass ("init" : name : args) = do
-	remote <- remoteLocationFor name
-	saveRemote remote
+	remote <- saveRemote name
 	newStatus <- readStatus "."
 	saveStatus newStatus { contents = [] }
 	putStrLn $ "Rebass initialized. Using remote repository " ++ remote

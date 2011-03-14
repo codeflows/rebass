@@ -1,4 +1,4 @@
-module Cache(saveStatus, loadStatus, saveRemote, getRemote, remoteLocationFor) where
+module Cache(saveStatus, loadStatus, saveRemote, getRemote) where
 
 import Status
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
@@ -14,12 +14,14 @@ loadStatus = do
      let state = read contents :: File
      return state
 
-saveRemote :: String -> IO ()
-saveRemote remote = do
-	createRebassDir
-	createDirectoryIfMissing True remote
-	putStrLn $ "Created directory " ++ remote
-	writeFile remoteConfigFile remote
+saveRemote :: String -> IO String
+saveRemote name = do
+    remote <- remoteLocationFor name
+    createRebassDir
+    createDirectoryIfMissing True remote
+    putStrLn $ "Created directory " ++ remote
+    writeFile remoteConfigFile remote
+    return remote
 	
 remoteLocationFor name = do
     home <- getHomeDirectory	
