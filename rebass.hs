@@ -4,7 +4,6 @@ import Diff
 import Cache
 import System.Environment(getArgs)
 
-
 main = do
 	args <- getArgs
 	rebass args
