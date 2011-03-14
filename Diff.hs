@@ -1,4 +1,4 @@
-module Diff where
+module Diff (Diff (Add, MkDir, Rm, Update), compareFile) where
 
 import Status
 
