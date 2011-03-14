@@ -7,23 +7,27 @@ import Text.ParserCombinators.Parsec
 -- TODO support any non-whitespace parameters
 parameter = many1 letter
 
-parameters = do
-              char ' '
-              p <- sepBy1 parameter (char ' ')
-              newline
-              return p
+parameters = sepBy1 parameter (char ' ')
+
+parameterList = do
+                  char ' '
+                  p <- parameters
+                  newline
+                  return p
 
 noParameters = do
                 newline
                 return [[]]
+
+maybeParameters = parameterList <|> noParameters
 
 command = many1 (letter <|> char '_')
 
 node = do
           char '<'
           c <- command
-          x <- parameters <|> noParameters
-          return (c, x)
+          p <- maybeParameters
+          return (c, p)
 
 parseNode input = parse node "lolcat" input
 
