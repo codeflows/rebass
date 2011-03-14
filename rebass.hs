@@ -19,7 +19,7 @@ rebass ("init" : name : args) = do
 			
 rebass ("update" : args) = do
 	remote <- getRemote
-	newStatus <- readStatus $ "."
+	newStatus <- readStatus "."
 	oldStatus <- loadStatus
 	let diff = compareFile oldStatus newStatus
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
