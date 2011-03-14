@@ -18,7 +18,11 @@ command = many1 (letter <|> char '_')
 node = do
           char '<'
           c <- command
-          x <- char ' ' <|> newline
+          x <- do
+                  char ' '
+                  parameters
+                  newline
+               <|> newline
           --p <- sepEndBy parameter (char ' ')
           return (c, x)
 
