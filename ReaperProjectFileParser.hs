@@ -9,11 +9,20 @@ line = sepBy cell (char ',')
 cell = many (noneOf ",\n")
 eol = char '\n'-}
 
-reaperNode = char '<'
+--parameter = 
 
-main    = do{ result <- parseFromFile reaperNode "Fake.RPP"
-              ; case result of
-                  Left err  -> print err
-                  Right xs  -> print xs
-              }
+command = many1 (letter <|> char '_')
+
+node = do
+          char '<'
+          sepEndBy1 command space
+          --return commands
+
+parseNode input = parse node "lolcat" input
+
+main = do
+          result <- parseFromFile node "Fake.RPP"
+          case result of
+            Left err  -> print err
+            Right xs  -> print xs
 
