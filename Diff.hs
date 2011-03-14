@@ -36,7 +36,7 @@ compareFile (Directory _ oldContents) new@(Directory _ newContents)
 conflicts :: [Diff] -> [Diff] -> [(Diff, Diff)]
 conflicts inbound outbound = filter isConflict [(a, b) | a <- inbound, b <- outbound]
     where isConflict (a, b) 
-                        --    | b `isParent` a  = True
-                         --   | a `isParent` b  = True
-                         --   | a `samePath` b  = True
+                            | b `parentOf` a  = True
+                            | a `parentOf` b  = True
+                            | a `samePath` b  = True
                             | otherwise       = False
