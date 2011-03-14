@@ -9,14 +9,18 @@ line = sepBy cell (char ',')
 cell = many (noneOf ",\n")
 eol = char '\n'-}
 
---parameter = 
+parameter = many1 letter
+
+parameters = sepBy1 parameter (char ' ')
 
 command = many1 (letter <|> char '_')
 
 node = do
           char '<'
-          sepEndBy1 command space
-          --return commands
+          c <- command
+          x <- char ' ' <|> newline
+          --p <- sepEndBy parameter (char ' ')
+          return (c, x)
 
 parseNode input = parse node "lolcat" input
 
