@@ -31,10 +31,15 @@ command = do
             p <- maybeParameters
             return $ Command n p
 
+child = do
+          -- TODO getting unelegant
+          many (char ' ')
+          command
+
 node = do
           char '<'
           mainCommand <- command
-          subCommands <- many command
+          subCommands <- many child
           char '>'
           return $ Node mainCommand subCommands
 
