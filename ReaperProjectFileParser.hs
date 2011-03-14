@@ -4,6 +4,7 @@ module Reaper where
 
 import Text.ParserCombinators.Parsec
 
+-- TODO support different types of parameters, e.g. decimal numbers, strings in quotes etc
 parameter = many1 (noneOf " \n")
 
 parameters = sepBy1 parameter (char ' ')
@@ -26,6 +27,7 @@ node = do
           char '<'
           c <- command
           p <- maybeParameters
+          char '>'
           return (c, p)
 
 parseNode input = parse node "lolcat" input
