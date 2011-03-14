@@ -6,10 +6,10 @@ import System.Directory
 import ReadFiles(handleFileOrDirectory)
 
 updateFiles :: Path -> Path -> [Diff] -> IO ()
-updateFiles src dest diffs = do
-        putStrLn $ "Updating " ++ src ++ " --> " ++ dest
-        mapM_ logAndUpdate diffs
-        putStrLn $ "Done"
+updateFiles src dest diffs =
+        (putStrLn $ "Updating " ++ src ++ " --> " ++ dest)
+        >> (mapM_ logAndUpdate diffs)
+        >> (putStrLn $ "Done")
   where
         logAndUpdate diff = (putStrLn $ show diff) >> update diff
         update (Add file) = copyFile (srcPath file) (destPath file)
