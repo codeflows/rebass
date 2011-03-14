@@ -6,7 +6,7 @@ import System.Directory(getDirectoryContents, doesDirectoryExist, getModificatio
 import System.Posix.Files(getFileStatus, fileSize)                                                              
 import Data.List(sort)
                 
-ignored = [".", "..", ".git", ".rebass"]
+ignored = [".", "..", ".git", ".gitignore", ".rebass"]
 
 readStatus :: Path -> IO File
 readStatus path = (doesDirectoryExist path) >>= (\dir -> if dir then (readDirectoryStatus path) else (readFileStatus path))
