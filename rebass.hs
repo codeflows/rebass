@@ -2,6 +2,7 @@ import Status
 import ReadFiles
 import Diff
 import Cache
+import UpdateFiles
 import System.Environment(getArgs)
 
 main = do
@@ -11,10 +12,11 @@ main = do
 rebass :: [String] -> IO ()	
 
 rebass ("init" : name : args) = do
-	saveRemote name
+	let remote = "~/Dropbox/Rebass/" ++ name
+	saveRemote remote
 	newStatus <- readStatus "."
 	saveStatus newStatus { contents = [] }
-	putStrLn $ "Rebass initialized"
+	putStrLn $ "Rebass initialized. Using remote repository " ++ remote
 			
 rebass ("update" : args) = do
 	remote <- getRemote
@@ -23,6 +25,7 @@ rebass ("update" : args) = do
 	let diff = compareFile oldStatus newStatus
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
 	putStrLn $ "Changed since last rebass: " ++ show diff
+	updateFiles "." remote diff
 	saveStatus newStatus        
 
 rebass ("status" : args) = do
