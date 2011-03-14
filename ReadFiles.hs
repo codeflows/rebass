@@ -1,6 +1,7 @@
 module ReadFiles (readStatus, handleFileOrDirectory) where
                              
 import Status
+import Path
 import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)                                                              

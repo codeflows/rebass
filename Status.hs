@@ -1,9 +1,8 @@
 module Status where
-                                 
+                    
+import Path                                 
 import System.IO
 import System.Time(CalendarTime)
-
-type Path = String    
 
 data File = RegularFile { path :: Path, status :: FileStatus } 
             | Directory { path :: Path, contents :: [File]}
@@ -11,7 +10,7 @@ data File = RegularFile { path :: Path, status :: FileStatus }
             
 data FileStatus = FileStatus { timeStamp :: CalendarTime, size :: Integer }                
             deriving (Show, Read, Eq)
-
-pathOf :: File -> String
-pathOf (RegularFile path _) = path
-pathOf (Directory   path _) = path
+            
+instance Pathy File where             
+    pathOf (RegularFile path _) = path
+    pathOf (Directory   path _) = path

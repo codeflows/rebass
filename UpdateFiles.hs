@@ -1,6 +1,6 @@
 module UpdateFiles where
 
-import Status
+import Path
 import Diff
 import System.Directory
 import ReadFiles(handleFileOrDirectory)

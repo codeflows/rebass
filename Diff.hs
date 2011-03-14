@@ -1,9 +1,13 @@
-module Diff (Diff (Add, MkDir, Rm, Update), compareFile) where
+module Diff (Diff (Add, MkDir, Rm, Update), compareFile, conflicts) where
 
 import Status
+import Path
 
-data Diff = Add Path | MkDir Path | Rm Path | Update Path
+data Diff = Add { path :: Path } | MkDir { path :: Path } | Rm { path :: Path } | Update { path :: Path }
     deriving (Show, Read)
+    
+instance Pathy Diff where
+    pathOf diff = Diff.path diff
 
 diff :: [File] -> [File] -> [Diff]       
 diff [] [] = []
@@ -28,3 +32,11 @@ compareFile (RegularFile path oldStatus) (RegularFile _ newStatus)
     | otherwise                = [Update path]
 compareFile (Directory _ oldContents) new@(Directory _ newContents) 
     = diff oldContents newContents
+
+conflicts :: [Diff] -> [Diff] -> [(Diff, Diff)]
+conflicts inbound outbound = filter isConflict [(a, b) | a <- inbound, b <- outbound]
+    where isConflict (a, b) 
+                        --    | b `isParent` a  = True
+                         --   | a `isParent` b  = True
+                         --   | a `samePath` b  = True
+                            | otherwise       = False
