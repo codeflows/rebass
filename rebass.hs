@@ -13,7 +13,7 @@ rebass :: [String] -> IO ()
 
 rebass ("init" : name : args) = do
 	saveRemote name
-	newStatus <- readStatus $ "."
+	newStatus <- readStatus "."
 	saveStatus newStatus { contents = [] }
 	putStrLn $ "Rebass initialized"
 			
@@ -27,7 +27,7 @@ rebass ("update" : args) = do
 	saveStatus newStatus        
 
 rebass ("status" : args) = do
-	newStatus <- readStatus $ "."
+	newStatus <- readStatus "."
 	oldStatus <- loadStatus
 	let diff = compareFile oldStatus newStatus
 	putStrLn $ "Changed since last rebass: " ++ show diff
