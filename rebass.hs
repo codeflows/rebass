@@ -1,7 +1,9 @@
 import Status
 import ReadFiles
 import Diff
+import Cache
 import System.Environment(getArgs)
+
 
 main = do
 	args <- getArgs
