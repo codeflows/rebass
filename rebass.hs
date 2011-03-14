@@ -11,18 +11,30 @@ main = do
 	
 rebass :: [String] -> IO ()	
 
-rebass [] = do
-	putStrLn $ "usage: rebass init|update"
-
-rebass ("init" : args) = do
+rebass ("init" : name : args) = do
+		saveRemote name
 		newStatus <- readStatus $ "."
-		saveStatus newStatus
+		saveStatus newStatus { contents = [] }
 		putStrLn $ "Rebass initialized"
 			
 rebass ("update" : args) = do
-        newStatus <- readStatus $ "."
-        oldStatus <- loadStatus
-        let diff = compareFile oldStatus newStatus
-        putStrLn $ "Changed since last rebass: " ++ show diff
-        saveStatus newStatus        
+		remote <- getRemote
+		newStatus <- readStatus $ "."
+		oldStatus <- loadStatus
+		let diff = compareFile oldStatus newStatus
+		putStrLn $ "Using remote repository '" ++ remote ++ "'"
+		putStrLn $ "Changed since last rebass: " ++ show diff
+		saveStatus newStatus        
+
+rebass ("status" : args) = do
+		newStatus <- readStatus $ "."
+		oldStatus <- loadStatus
+		let diff = compareFile oldStatus newStatus
+		putStrLn $ "Changed since last rebass: " ++ show diff
+
+rebass _ = do
+	putStrLn "USAGE:"
+	putStrLn "rebass init <name>"
+	putStrLn "rebass update"
+	putStrLn "rebass status"
 
