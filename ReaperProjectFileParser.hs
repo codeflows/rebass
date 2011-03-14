@@ -21,14 +21,18 @@ noParameters = do
 
 maybeParameters = parameterList <|> noParameters
 
-command = many1 (letter <|> char '_')
+name = many1 (letter <|> char '_')
+
+command = do
+            n <- name
+            p <- maybeParameters
+            return (n, p)
 
 node = do
           char '<'
           c <- command
-          p <- maybeParameters
           char '>'
-          return (c, p)
+          return c
 
 parseNode input = parse node "lolcat" input
 
