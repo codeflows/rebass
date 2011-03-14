@@ -11,19 +11,22 @@ eol = char '\n'-}
 
 parameter = many1 letter
 
-parameters = sepBy1 parameter (char ' ')
+parameters = do
+              char ' '
+              p <- sepBy1 parameter (char ' ')
+              newline
+              return p
+
+noParameters = do
+                newline
+                return [[]]
 
 command = many1 (letter <|> char '_')
 
 node = do
           char '<'
           c <- command
-          x <- do
-                  char ' '
-                  parameters
-                  newline
-               <|> newline
-          --p <- sepEndBy parameter (char ' ')
+          x <- parameters <|> noParameters
           return (c, x)
 
 parseNode input = parse node "lolcat" input
