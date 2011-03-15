@@ -35,4 +35,4 @@ readRoot root = read root
         relativePath path = drop ((length root)+1) path
                   
 handleFileOrDirectory path fileHandler directoryHandler = 
-    (doesDirectoryExist path) >>= (\dir -> if dir then (directoryHandler path) else (fileHandler path))                  
+    (doesDirectoryExist path) >>= (\dir -> if dir then (directoryHandler path) else (fileHandler path))

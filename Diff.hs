@@ -38,7 +38,8 @@ compareStatus old new = (compareFile (localStatus old) (localStatus new), compar
 
 getConflicts :: ([Diff], [Diff]) -> [(Diff, Diff)]
 getConflicts (local, remote) = filter isConflict [(a, b) | a <- local, b <- remote]
-    where isConflict (a, b) 
+    where isConflict ((Rm _), (Rm _)) = False
+          isConflict (a, b) 
                             | b `parentOf` a  = True
                             | a `parentOf` b  = True
                             | a `samePath` b  = True
