@@ -29,6 +29,7 @@ rebass ("status" : _) = do
     diff <- calculateDiff
     showDiff "remote repository" $ snd diff
     showDiff "local files" $ fst diff
+    putStrLn $ "Conflicts : " ++ show (getConflicts diff)
   where
     showDiff name diff = do
     	putStrLn $ "Changes in " ++ name ++ ": " ++ show diff    
