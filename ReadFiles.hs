@@ -12,14 +12,14 @@ ignored = [".", "..", ".git", ".gitignore", ".rebass"]
 readStatus :: Path -> IO File
 readStatus root = read root
     where
-        read path = handleFileOrDirectory path readFileStatus readDirectoryStatus
+        read path = handleFileOrDirectory path readFile readDirectory
 
-        readFileStatus path = do
+        readFile path = do
             timestamp <- getModificationTime path >>= toCalendarTime
             posixFileStatus <- getFileStatus path
             return $ RegularFile (relativePath path) $ FileStatus timestamp (toInteger $ fileSize posixFileStatus)
 
-        readDirectoryStatus path = do      
+        readDirectory path = do      
             contents <- (getDirectoryContents path >>= (readDirectoryContents path))
             return $ Directory (relativePath path) contents                    
 
