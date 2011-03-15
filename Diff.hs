@@ -1,4 +1,4 @@
-module Diff (Diff (Add, MkDir, Rm, Update), compareFile, conflicts) where
+module Diff (Diff (Add, MkDir, Rm, Update), compareFile, getConflicts) where
 
 import Status
 import Path
@@ -33,8 +33,8 @@ compareFile (RegularFile path oldStatus) (RegularFile _ newStatus)
 compareFile (Directory _ oldContents) new@(Directory _ newContents) 
     = diff oldContents newContents
 
-conflicts :: [Diff] -> [Diff] -> [(Diff, Diff)]
-conflicts inbound outbound = filter isConflict [(a, b) | a <- inbound, b <- outbound]
+getConflicts :: [Diff] -> [Diff] -> [(Diff, Diff)]
+getConflicts inbound outbound = filter isConflict [(a, b) | a <- inbound, b <- outbound]
     where isConflict (a, b) 
                             | b `parentOf` a  = True
                             | a `parentOf` b  = True

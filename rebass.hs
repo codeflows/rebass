@@ -5,28 +5,34 @@ import Cache
 import UpdateFiles
 import System.Environment(getArgs)
 
-main = do
-	args <- getArgs
-	rebass args
+main = getArgs >>= rebass
 	
 rebass :: [String] -> IO ()	
 
-rebass ("init" : name : args) = do
+rebass ("init" : name : _) = do
 	remote <- saveRemote name
 	newStatus <- readStatus "."
 	saveStatus newStatus { contents = [] }
 	putStrLn $ "Rebass initialized. Using remote repository " ++ remote
 			
-rebass ("update" : args) = do
+rebass ("update" : _) = do
 	remote <- getRemote
-	newStatus <- readStatus "."
-	oldStatus <- loadStatus
-	let diff = compareFile oldStatus newStatus
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
-	updateFiles "." remote diff
-	saveStatus newStatus        
+	newLocalStatus <- readStatus "."
+	newRemoteStatus <- readStatus remote
+	oldStatus <- loadStatus
+	let localDiff = compareFile oldStatus newLocalStatus
+	let remoteDiff = compareFile oldStatus newRemoteStatus
+	let conflicts = getConflicts remoteDiff localDiff
+	resolveConflictsAndUpdate conflicts remote localDiff newLocalStatus
+  where 
+    resolveConflictsAndUpdate [] remote localDiff newLocalStatus = do
+    	updateFiles "." remote localDiff
+    	saveStatus newLocalStatus        
+    resolveConflictsAndUpdate conflicts _ _ _ = do
+    	putStrLn $ "Conflicts : " ++ show conflicts    
 
-rebass ("status" : args) = do
+rebass ("status" : _) = do
 	newStatus <- readStatus "."
 	oldStatus <- loadStatus
 	let diff = compareFile oldStatus newStatus
