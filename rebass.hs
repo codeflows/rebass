@@ -19,25 +19,24 @@ rebass ("update" : _) = do
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
 	newStatus <- readFiles "." remote
 	oldStatus <- loadStatus
-	let localDiff = compareFile (localStatus oldStatus) (localStatus newStatus)
-	let remoteDiff = compareFile (remoteStatus oldStatus) (remoteStatus newStatus)
-	let conflicts = getConflicts remoteDiff localDiff
-	resolveConflictsAndUpdate conflicts remote localDiff newStatus
+	let diff = compareStatus oldStatus newStatus
+	let conflicts = getConflicts diff
+	resolveConflictsAndUpdate conflicts remote diff
   where 
-    resolveConflictsAndUpdate [] remote localDiff newStatus = do
-    	updateFiles "." remote localDiff
-    	saveStatus newStatus        
-    resolveConflictsAndUpdate conflicts _ _ _ = do
+    resolveConflictsAndUpdate [] remote diff = do
+    	updateFiles "." remote $ fst diff
+    	readFiles "." remote >>= saveStatus
+    resolveConflictsAndUpdate conflicts _ _ = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
 
 rebass ("status" : _) = do
     newStatus <- getRemote >>= (readFiles ".")
     oldStatus <- loadStatus
-    showDiff "remote repository" (remoteStatus oldStatus) (remoteStatus newStatus)
-    showDiff "local files" (localStatus oldStatus) (localStatus newStatus)
+    let diff = compareStatus oldStatus newStatus    
+    showDiff "remote repository" $ snd diff
+    showDiff "local files" $ fst diff
   where
-    showDiff name old new = do
-    	let diff = compareFile old new
+    showDiff name diff = do
     	putStrLn $ "Changes in " ++ name ++ ": " ++ show diff    
 
 rebass _ = do
