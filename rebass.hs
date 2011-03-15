@@ -33,10 +33,14 @@ rebass ("update" : _) = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
 
 rebass ("status" : _) = do
-	newStatus <- readStatus "."
-	oldStatus <- loadStatus
-	let diff = compareFile oldStatus newStatus
-	putStrLn $ "Changed since last rebass: " ++ show diff
+    getRemote >>= (showDiff "remote repository")
+    showDiff "local files" "."
+  where
+    showDiff name path = do
+    	newStatus <- readStatus path
+    	oldStatus <- loadStatus
+    	let diff = compareFile oldStatus newStatus
+    	putStrLn $ "Changes in " ++ name ++ ": " ++ show diff    
 
 rebass _ = do
 	putStrLn "USAGE:"
