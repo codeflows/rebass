@@ -21,6 +21,7 @@ rebass ("update" : _) = do
     resolveConflictsAndUpdate [] diff = do
         remote <- getRemote
         updateFiles "." remote $ fst diff
+        updateFiles remote "." $ snd diff
     	readFiles "." remote >>= saveStatus
     resolveConflictsAndUpdate conflicts _ = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
