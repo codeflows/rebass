@@ -11,35 +11,33 @@ rebass :: [String] -> IO ()
 
 rebass ("init" : name : _) = do
 	remote <- saveRemote name
-	newStatus <- readStatus "."
-	saveStatus newStatus { contents = [] }
+	saveStatus $ Status emptyDir emptyDir
 	putStrLn $ "Rebass initialized. Using remote repository " ++ remote
 			
 rebass ("update" : _) = do
 	remote <- getRemote
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
-	newLocalStatus <- readStatus "."
-	newRemoteStatus <- readStatus remote
+	newStatus <- readStatus "." remote
 	oldStatus <- loadStatus
-	let localDiff = compareFile oldStatus newLocalStatus
-	let remoteDiff = compareFile oldStatus newRemoteStatus
+	let localDiff = compareFile (localStatus oldStatus) (localStatus newStatus)
+	let remoteDiff = compareFile (remoteStatus oldStatus) (remoteStatus newStatus)
 	let conflicts = getConflicts remoteDiff localDiff
-	resolveConflictsAndUpdate conflicts remote localDiff newLocalStatus
+	resolveConflictsAndUpdate conflicts remote localDiff newStatus
   where 
-    resolveConflictsAndUpdate [] remote localDiff newLocalStatus = do
+    resolveConflictsAndUpdate [] remote localDiff newStatus = do
     	updateFiles "." remote localDiff
-    	saveStatus newLocalStatus        
+    	saveStatus newStatus        
     resolveConflictsAndUpdate conflicts _ _ _ = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
 
 rebass ("status" : _) = do
-    getRemote >>= (showDiff "remote repository")
-    showDiff "local files" "."
+    newStatus <- getRemote >>= (readStatus ".")
+    oldStatus <- loadStatus
+    showDiff "remote repository" (remoteStatus oldStatus) (remoteStatus newStatus)
+    showDiff "local files" (localStatus oldStatus) (localStatus newStatus)
   where
-    showDiff name path = do
-    	newStatus <- readStatus path
-    	oldStatus <- loadStatus
-    	let diff = compareFile oldStatus newStatus
+    showDiff name old new = do
+    	let diff = compareFile old new
     	putStrLn $ "Changes in " ++ name ++ ": " ++ show diff    
 
 rebass _ = do

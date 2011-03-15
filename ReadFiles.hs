@@ -6,11 +6,15 @@ import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)                                                              
 import Data.List(sort)
+import Control.Monad
                 
 ignored = [".", "..", ".git", ".gitignore", ".rebass"]
 
-readStatus :: Path -> IO File
-readStatus root = read root
+readStatus :: Path -> Path -> IO Status
+readStatus local remote = liftM2 Status (readRoot local) (readRoot remote)
+
+readRoot :: Path -> IO File
+readRoot root = read root
     where
         read path = handleFileOrDirectory path readFile readDirectory
 

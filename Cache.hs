@@ -3,16 +3,16 @@ module Cache(saveStatus, loadStatus, saveRemote, getRemote) where
 import Status
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
 
-saveStatus :: File -> IO ()
-saveStatus root = do 
+saveStatus :: Status -> IO ()
+saveStatus status = do 
 	 createRebassDir
-	 writeFile statusFile $ show root
+	 writeFile statusFile $ show status
 
-loadStatus :: IO File     
+loadStatus :: IO Status     
 loadStatus = do
      contents <- readFile statusFile
-     let state = read contents :: File
-     return state
+     let status = read contents :: Status
+     return status
 
 saveRemote :: String -> IO String
 saveRemote name = do
