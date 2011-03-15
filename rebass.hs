@@ -17,7 +17,7 @@ rebass ("init" : name : _) = do
 rebass ("update" : _) = do
 	remote <- getRemote
 	putStrLn $ "Using remote repository '" ++ remote ++ "'"
-	newStatus <- readStatus "." remote
+	newStatus <- readFiles "." remote
 	oldStatus <- loadStatus
 	let localDiff = compareFile (localStatus oldStatus) (localStatus newStatus)
 	let remoteDiff = compareFile (remoteStatus oldStatus) (remoteStatus newStatus)
@@ -31,7 +31,7 @@ rebass ("update" : _) = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
 
 rebass ("status" : _) = do
-    newStatus <- getRemote >>= (readStatus ".")
+    newStatus <- getRemote >>= (readFiles ".")
     oldStatus <- loadStatus
     showDiff "remote repository" (remoteStatus oldStatus) (remoteStatus newStatus)
     showDiff "local files" (localStatus oldStatus) (localStatus newStatus)
