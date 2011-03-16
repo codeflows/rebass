@@ -2,22 +2,20 @@ module UpdateFiles where
 
 import Path
 import Diff
-import System.Directory
-import ReadFiles(handleFileOrDirectory)
+import UpdateFile
+import Compress
 
 updateFiles :: Path -> Path -> [Diff] -> IO ()
 updateFiles src _ [] =
         putStrLn $ "No changes in " ++ src
 updateFiles src dest diffs =
         (putStrLn $ "Updating " ++ src ++ " --> " ++ dest)
-        >> (mapM_ logAndUpdate diffs)
+        >> (mapM_ (logAndUpdate src dest) diffs)
         >> (putStrLn $ "Done")
-  where
-        logAndUpdate diff = (putStrLn $ show diff) >> update diff
-        update (Add file) = copyFile (srcPath file) (destPath file)
-        update (MkDir dir) = createDirectoryIfMissing True (destPath dir)
-        update (Rm path) = handleFileOrDirectory (destPath path) removeFile removeDirectoryRecursive
-        update (Update file) = copyFile (srcPath file) (destPath file)
-        destPath path = dest ++ "/" ++ path
-        srcPath path = src ++ "/" ++ path
+
+logAndUpdate src dest diff = do
+    putStrLn $ show diff
+    (compressAndUpdate src dest) diff
+        
+    
         

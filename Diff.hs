@@ -43,4 +43,4 @@ getConflicts (local, remote) = filter isConflict [(a, b) | a <- local, b <- remo
                             | b `parentOf` a  = True
                             | a `parentOf` b  = True
                             | a `samePath` b  = True
-                            | otherwise       = False
+                            | otherwise       = False                            

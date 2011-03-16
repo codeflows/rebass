@@ -21,7 +21,6 @@ rebass ["update"] = do
   where 
     resolveConflictsAndUpdate [] diff = do
         remote <- getRemote
-        compress "." $ fst diff
         updateFiles "." remote $ fst diff
         updateFiles remote "." $ snd diff
     	readFiles "." remote >>= saveStatus
