@@ -3,30 +3,32 @@ import ReadFiles
 import Diff
 import Cache
 import UpdateFiles
+import Compress
 import System.Environment(getArgs)
 
 main = getArgs >>= rebass
 	
 rebass :: [String] -> IO ()	
 
-rebass ("init" : name : _) = do
+rebass ["init", name] = do
 	remote <- saveRemote name
 	saveStatus $ Status emptyDir emptyDir
 	putStrLn $ "Rebass initialized. Using remote repository " ++ remote
 			
-rebass ("update" : _) = do
+rebass ["update"] = do
 	diff <- calculateDiff
 	resolveConflictsAndUpdate (getConflicts diff) diff
   where 
     resolveConflictsAndUpdate [] diff = do
         remote <- getRemote
+        compress "." $ fst diff
         updateFiles "." remote $ fst diff
         updateFiles remote "." $ snd diff
     	readFiles "." remote >>= saveStatus
     resolveConflictsAndUpdate conflicts _ = do
     	putStrLn $ "Conflicts : " ++ show conflicts    
 
-rebass ("status" : _) = do
+rebass ["status"] = do
     diff <- calculateDiff
     showDiff "remote repository" $ snd diff
     showDiff "local files" $ fst diff
