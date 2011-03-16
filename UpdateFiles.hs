@@ -6,6 +6,8 @@ import System.Directory
 import ReadFiles(handleFileOrDirectory)
 
 updateFiles :: Path -> Path -> [Diff] -> IO ()
+updateFiles src _ [] =
+        putStrLn $ "No changes in " ++ src
 updateFiles src dest diffs =
         (putStrLn $ "Updating " ++ src ++ " --> " ++ dest)
         >> (mapM_ logAndUpdate diffs)
