@@ -1,2 +1,0 @@
-- Low quality versions in mp3
-- Transfer wavs compressed with wavpack?

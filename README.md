@@ -16,3 +16,8 @@ Try it out
 ---------- 
 
 ./rebass
+
+Backlog
+-------
+
+- Modify Reaper project file, converting wav references to mp3 ones
