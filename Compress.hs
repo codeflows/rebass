@@ -3,6 +3,7 @@ module Compress(compressAndUpdate) where
 import Diff
 import Path
 import System.Process
+import System.Exit
 import List
 import UpdateFile
 
@@ -15,8 +16,9 @@ compressDiff _ _ = return ()
 
 compressFile path | ".wav" `elem` (tails path) = do
     putStrLn $ "Compressing " ++ path
-    createProcess $ shell ("lame " ++ path)
-    return ()
+    result <- readProcessWithExitCode "lame" [path] []
+    case result of
+        (ExitSuccess, _, _) -> return ()
     
 compressFile _ = return ()
 
