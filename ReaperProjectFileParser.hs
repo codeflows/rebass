@@ -1,21 +1,12 @@
 -- Attempt at parsing Reaper project files with Parsec
 
-module Reaper where
+module ReaperProjectFileParser(parseNode) where
 
 import Text.ParserCombinators.Parsec
 
-name :: CharParser st [Char]
--- TODO accept any non-whitespace values for now?
-
-node :: CharParser st [Char]
+node :: CharParser st Char
 node = do
   char '<'
-  name
 
-parseNode input = parse node "lolcat" input
-
-main = do
-          result <- parseFromFile node "Fake.RPP"
-          case result of
-            Left err  -> print err
-            Right xs  -> print xs
+parseNode :: String -> Either ParseError Char
+parseNode input = parse node "no source file" input
