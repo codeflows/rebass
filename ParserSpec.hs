@@ -9,9 +9,14 @@ import ReaperProjectFileParser
 
 parserSpecs = describe "Reaper project file parser" [
     it "parses minimal project definition"
-      (assertParseResult "<REAPER_PROJECT\n>" $ Node "REAPER_PROJECT" []),
+      (assertParseResult
+        "<REAPER_PROJECT\n>"
+        (Node "REAPER_PROJECT" [])),
+
     it "parses minimal project definition with parameters"
-      (assertParseResult "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" $ Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
+      (assertParseResult
+        "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>"
+        (Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]))
   ]
 
 -- TODO <REAPER_PROJECT\n0.1 ... -> child nodes
