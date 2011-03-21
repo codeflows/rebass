@@ -9,7 +9,7 @@ import Text.ParserCombinators.Parsec
 
 data Command = Command String [String] deriving (Show, Eq)
 
-data Node = Node Command deriving (Show, Eq)
+data Node = Node Command [Command] deriving (Show, Eq)
 
 name :: CharParser st String
 name = many1 (letter <|> char '_')
@@ -33,7 +33,7 @@ node = do
   n <- name
   p <- parameters
   char '>'
-  return $ Node (Command n p)
+  return $ Node (Command n p) []
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input
