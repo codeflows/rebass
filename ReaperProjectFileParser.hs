@@ -14,10 +14,13 @@ parameter = many1 (noneOf " \n")
 
 parameters :: CharParser st [String]
 parameters = do
-  char ' '
-  p <- sepBy1 parameter (char ' ')
+  p <- option [] parameterList
   newline
   return p
+  where
+    parameterList = do
+      char ' '
+      sepBy1 parameter (char ' ')
 
 node :: CharParser st Node
 node = do
