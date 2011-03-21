@@ -22,7 +22,8 @@ node = do
   char '<'
   n <- name
   p <- parameters
-  return $ Node "REAPER_PROJECT" ["0.1","\"3.73/OSX\">"] --Node n p
+  char '>'
+  return $ Node n p
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input

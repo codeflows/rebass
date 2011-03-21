@@ -14,10 +14,10 @@ parserSpecs = describe "Reaper project file parser" [
           name = "REAPER_PROJECT",
           parameters = [ "0.1", "\"3.73/OSX\""] })
  ]-}
-    it "parses successfully"
+    it "parses minimal project definition with parameters"
       (do
          let expected = Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]
-         let actual   = parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" 
+         let actual   = parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">"
          HUnit.assertEqual "letters to numbers" expected actual)
 
 --      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
