@@ -27,13 +27,18 @@ parameters = do
       char ' '
       sepBy1 parameter (char ' ')
 
+command :: CharParser st Command
+command = do
+  n <- name
+  p <- parameters
+  return $ Command n p
+ 
 node :: CharParser st Node
 node = do
   char '<'
-  n <- name
-  p <- parameters
+  c <- command
   char '>'
-  return $ Node (Command n p) []
+  return $ Node c []
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input
