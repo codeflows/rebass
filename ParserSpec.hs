@@ -7,7 +7,10 @@ import ReaperProjectFileParser
 
 parserSpecs = describe "Minimal project file" [
     it "parses successfully"
-      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" == Node { name = "REAPER_PROJECT", parameters = [] })
+      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
+        Node {
+          name = "REAPER_PROJECT",
+          parameters = [ "0.1", "\"3.73/OSX\""] })
  ]
 
 parse :: String -> Node
