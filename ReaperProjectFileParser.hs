@@ -10,7 +10,7 @@ name :: CharParser st String
 name = many1 (letter <|> char '_')
 
 parameter :: CharParser st String
-parameter = many1 (noneOf " ")
+parameter = many1 (noneOf " \n")
 
 parameters :: CharParser st [String]
 parameters = do
