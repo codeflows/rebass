@@ -32,13 +32,19 @@ command = do
   n <- name
   p <- parameters
   return $ Command n p
- 
+
+children :: CharParser st [Command]
+children = do
+  many (char ' ')
+  return []
+
 node :: CharParser st Node
 node = do
   char '<'
   c <- command
+  cs <- children
   char '>'
-  return $ Node c []
+  return $ Node c cs
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input
