@@ -35,12 +35,11 @@ command = do
 
 children :: CharParser st [Command]
 children = do
-  option [] commands
+  many commands
   where
     commands = do
       many (char ' ')
-      c <- command
-      return [c]
+      command
 
 node :: CharParser st Node
 node = do
