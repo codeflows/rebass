@@ -4,8 +4,13 @@ module Reaper where
 
 import Text.ParserCombinators.Parsec
 
+name :: CharParser st [Char]
+-- TODO accept any non-whitespace values for now?
+
+node :: CharParser st [Char]
 node = do
   char '<'
+  name
 
 parseNode input = parse node "lolcat" input
 
