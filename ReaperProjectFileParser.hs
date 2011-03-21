@@ -13,14 +13,16 @@ parameter :: CharParser st String
 parameter = many1 (noneOf " ")
 
 parameters :: CharParser st [String]
-parameters = sepBy1 parameter (char ' ')
+parameters = do
+  char ' '
+  sepBy1 parameter (char ' ')
 
 node :: CharParser st Node
 node = do
   char '<'
   n <- name
   p <- parameters
-  return $ Node n p
+  return $ Node "REAPER_PROJECT" ["0.1","\"3.73/OSX\">"] --Node n p
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input

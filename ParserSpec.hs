@@ -3,6 +3,8 @@
 module ParserSpec where
 
 import Test.Hspec
+import Test.Hspec.HUnit ()
+import qualified Test.HUnit as HUnit
 import ReaperProjectFileParser
 
 parserSpecs = describe "Reaper project file parser" [
@@ -13,8 +15,13 @@ parserSpecs = describe "Reaper project file parser" [
           parameters = [ "0.1", "\"3.73/OSX\""] })
  ]-}
     it "parses successfully"
-      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
-        Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
+      (do
+         let expected = Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]
+         let actual   = parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" 
+         HUnit.assertEqual "letters to numbers" expected actual)
+
+--      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
+--        Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
   ]
 
 -- TODO <REAPER_PROJECT\n0.1 ... -> child nodes
