@@ -5,13 +5,19 @@ module ParserSpec where
 import Test.Hspec
 import ReaperProjectFileParser
 
-parserSpecs = describe "Minimal project file" [
-    it "parses successfully"
-      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
+parserSpecs = describe "Reaper project file parser" [
+{-    it "parses minimal project definition"
+      (parse "<REAPER_PROJECT>" ==
         Node {
           name = "REAPER_PROJECT",
           parameters = [ "0.1", "\"3.73/OSX\""] })
- ]
+ ]-}
+    it "parses successfully"
+      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" ==
+        Node "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
+  ]
+
+-- TODO <REAPER_PROJECT\n0.1 ... -> child nodes
 
 parse :: String -> Node
 parse input =
