@@ -16,12 +16,12 @@ parserSpecs = describe "Reaper project file parser" [
     it "parses minimal project definition with parameters"
       (assertParseResult
         "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>"
-        (Node (Command "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]) []))
+        (Node (Command "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]) [])),
 
-{-    it "parses project definition with commands"
+    it "parses project definition with commands"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>"
-        (Node "REAPER_PROJECT" []))-}
+        (Node (Command "REAPER_PROJECT" []) [Command "SAMPLERATE" ["44100", "0"]]))
   ]
 
 -- TODO <REAPER_PROJECT\n0.1 ... -> child nodes
