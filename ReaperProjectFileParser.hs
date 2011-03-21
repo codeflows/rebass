@@ -15,7 +15,9 @@ parameter = many1 (noneOf " ")
 parameters :: CharParser st [String]
 parameters = do
   char ' '
-  sepBy1 parameter (char ' ')
+  p <- sepBy1 parameter (char ' ')
+  newline
+  return p
 
 node :: CharParser st Node
 node = do
