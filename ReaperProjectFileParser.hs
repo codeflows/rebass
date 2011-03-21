@@ -8,13 +8,17 @@ data Node = Node { name :: String
                  , parameters :: [String]
                  } deriving (Show, Eq)
 
-nameP :: CharParser st String
-nameP = many1 (letter <|> char '_')
+name' :: CharParser st String
+name' = many1 (letter <|> char '_')
+
+parameters' :: CharParser st [String]
+parameters' = undefined
 
 node :: CharParser st Node
 node = do
   char '<'
-  n <- nameP
+  n <- name'
+  p <- parameters'
   return $ Node { name = n, parameters = [] }
 
 parseProject :: String -> Either ParseError Node
