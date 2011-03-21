@@ -9,15 +9,15 @@ import Test.QuickCheck hiding (property)
 import Test.HUnit
 import ReaperProjectFileParser
 
-parse :: String -> Char
-parse input =
-  case parseNode input of
-    Right r -> r
-
-parserSpecs = describe "With '<'" [
+parserSpecs = describe "Minimal project file" [
     it "parses successfully"
-      (parse "<" == '<')
+      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" == ReaperProject 0.1 "3.73/OSX")
   ]
+
+parse :: String -> ReaperProject
+parse input =
+  case parseProject input of
+    Right r -> r
 
 main :: IO()
 main = hspec parserSpecs
