@@ -10,7 +10,7 @@ import ReaperProjectFileParser
 
 parserSpecs = describe "Minimal project file" [
     it "parses successfully"
-      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" == Node ["0.1", "\"3.73/OSX\""])
+      (parse "<REAPER_PROJECT 0.1 \"3.73/OSX\">" == Node { name = "REAPER_PROJECT", parameters = [] })
  ]
 
 -- TODO handles values of different types (Float, String etc) properly
