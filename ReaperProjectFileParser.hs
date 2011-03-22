@@ -6,7 +6,7 @@ import ReaperProject(Node(Container, Leaf), Command(Command))
 import Text.ParserCombinators.Parsec
 
 name :: CharParser st String
-name = many1 (letter <|> char '_')
+name = many1 (letter <|> digit <|> char '_')
 
 parameter :: CharParser st String
 parameter = many1 (noneOf " \n")

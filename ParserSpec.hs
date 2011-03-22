@@ -47,7 +47,10 @@ parserSpecs = describe "Reaper project file parser" [
             ]
           ]
         ]
-      )
+      ),
+
+    it "accepts digits in command names" $
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])])
   ]
 
 projectDefinitionWithManyCommands =
@@ -76,6 +79,7 @@ emptyReaperProject = emptyReaperProjectHeader []
  - strings:  "mah string"
  -}
 -- TODO failure cases
+-- TODO require that top-level tag actually is REAPER_PROJECT?
 
 shouldParseInto :: String -> Node -> HUnit.Assertion
 shouldParseInto input expected = do
