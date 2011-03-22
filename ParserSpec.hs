@@ -6,6 +6,8 @@ import Test.Hspec
 import Test.Hspec.HUnit ()
 import qualified Test.HUnit as HUnit
 
+import Text.ParserCombinators.Parsec
+
 import ReaperProject
 import ReaperProjectFileParser
 
@@ -80,6 +82,9 @@ shouldParseInto input expected = do
   case parseProject input of
     Left error -> HUnit.assertFailure $ show error
     Right node -> HUnit.assertEqual "parse result" expected node
+
+parseProject :: String -> Either ParseError Node
+parseProject input = parse project "(no source file)" input
 
 main :: IO()
 main = hspec parserSpecs

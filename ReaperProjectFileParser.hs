@@ -1,6 +1,6 @@
 -- Attempt at parsing Reaper project files with Parsec
 
-module ReaperProjectFileParser (parseProject) where
+module ReaperProjectFileParser (project) where
 
 import ReaperProject(Node(Container, Leaf), Command(Command))
 import Text.ParserCombinators.Parsec
@@ -45,5 +45,5 @@ node = do
   char '>'
   return $ Container c cs
 
-parseProject :: String -> Either ParseError Node
-parseProject input = parse node "(no source file)" input
+project :: CharParser st Node
+project = node
