@@ -34,31 +34,32 @@ parserSpecs = describe "Reaper project file parser" [
    it "parses project definition with many commands"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>"
-        (Container
-          (Command "REAPER_PROJECT" [])
-          [Leaf $ Command "SAMPLERATE" ["44100", "0"], Leaf $ Command "LOCK" ["1"]])),
+        projectDefinitionWithManyCommands),
 
    it "parses project definition with many commands regardless of whitespace"
       (assertParseResult
         "<REAPER_PROJECT\nSAMPLERATE 44100 0\nLOCK 1\n>"
-        (Container
-          (Command "REAPER_PROJECT" [])
-          [Leaf $ Command "SAMPLERATE" ["44100", "0"], Leaf $ Command "LOCK" ["1"]])),
+        projectDefinitionWithManyCommands),
 
     it "parses project definition with child nodes"
       (assertParseResult
         "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>"
-        projectDefinitionWithChildren
-      ),
+        projectDefinitionWithChildContainers),
 
     it "parses project definition with child nodes regardless of whitespace"
       (assertParseResult
         "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>"
-        projectDefinitionWithChildren
-      )
+        projectDefinitionWithChildContainers)
   ]
 
-projectDefinitionWithChildren =
+projectDefinitionWithManyCommands =
+  Container (Command "REAPER_PROJECT" [])
+    [
+      Leaf (Command "SAMPLERATE" ["44100", "0"]),
+      Leaf (Command "LOCK" ["1"])
+    ]
+
+projectDefinitionWithChildContainers =
   Container (Command "REAPER_PROJECT" [])
     [
       Container (Command "CHILD" ["1"])
