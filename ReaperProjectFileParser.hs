@@ -32,17 +32,16 @@ leafCommand = do
   c <- command
   return $ Leaf c
 
-child :: CharParser st Node
-child = do
-  spaces
-  node <|> leafCommand
+children :: CharParser st [Node]
+children = do
+  endBy (node <|> leafCommand) spaces
 
 node :: CharParser st Node
 node = do
   char '<'
   c <- command
-  -- TODO consume whitespace here anyway
-  cs <- many child
+  spaces
+  cs <- children
   char '>'
   return $ Container c cs
 
