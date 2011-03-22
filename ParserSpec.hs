@@ -37,6 +37,11 @@ parserSpecs = describe "Reaper project file parser" [
         (Node (Command "REAPER_PROJECT" []) []))
   ]
 
+{- TODO parameter types:
+ - integers: 6 -1
+ - decimals: 1.000000000 -1.00000
+ - strings:  "mah string"
+ -}
 -- TODO failure cases
 
 assertParseResult :: String -> Node -> HUnit.Assertion
