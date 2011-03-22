@@ -9,7 +9,13 @@ name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
 parameter :: CharParser st String
-parameter = many1 (noneOf " \n")
+parameter =
+      -- TODO this will probably accepts newlines inside quotes as well
+      between quote quote (many $ noneOf "\"")
+      -- TODO duplication
+  <|> many1 (noneOf " \n\r")
+      where
+        quote = char '"'
 
 parameters :: CharParser st [String]
 parameters = do
@@ -21,6 +27,7 @@ parameters = do
       char ' '
       sepBy1 parameter (char ' ')
     newline =
+      -- TODO not exactly correct, should be a combination of these
       many1 (oneOf "\n\r")
 
 command :: CharParser st Command

@@ -16,7 +16,7 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\n>" `shouldParseInto` emptyReaperProject,
 
     it "parses minimal project definition with parameters" $
-      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" `shouldParseInto` (reaperProjectHeader ["0.1", "\"3.73/OSX\""] []),
+      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" `shouldParseInto` (reaperProjectHeader ["0.1", "3.73/OSX"] []),
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
@@ -53,7 +53,7 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])]),
 
     it "accepts carriage returns instead of newlines" $
-      "<REAPER_PROJECT 0.1\r>" `shouldParseInto` emptyReaperProject,
+      "<REAPER_PROJECT 0.1\r>" `shouldParseInto` (reaperProjectHeader ["0.1"] []),
 
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
