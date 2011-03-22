@@ -27,9 +27,9 @@ parserSpecs = describe "Reaper project file parser" [
     it "parses project definition with one command"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>"
-        (Container
-          (Command "REAPER_PROJECT" [])
-          [Leaf $ Command "SAMPLERATE" ["44100", "0"]])),
+        (emptyReaperProject
+          [Leaf (Command "SAMPLERATE" ["44100", "0"])]
+        )),
 
    it "parses project definition with many commands"
       (assertParseResult
