@@ -53,7 +53,15 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])]),
 
     it "accepts carriage returns instead of newlines" $
-      "<REAPER_PROJECT\r>" `shouldParseInto` emptyReaperProject
+      "<REAPER_PROJECT\r>" `shouldParseInto` emptyReaperProject,
+
+    it "parses string literals" $
+      "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
+        (emptyReaperProjectHeader
+          [
+            Leaf (Command "MARKER" ["2", "31.30434782608696", "Verse 1", "0"])
+          ]
+        )
   ]
 
 projectDefinitionWithManyCommands =
