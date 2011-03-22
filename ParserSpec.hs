@@ -38,21 +38,34 @@ parserSpecs = describe "Reaper project file parser" [
           (Command "REAPER_PROJECT" [])
           [Leaf $ Command "SAMPLERATE" ["44100", "0"], Leaf $ Command "LOCK" ["1"]])),
 
+   it "parses project definition with many commands regardless of whitespace"
+      (assertParseResult
+        "<REAPER_PROJECT\nSAMPLERATE 44100 0\nLOCK 1\n>"
+        (Container
+          (Command "REAPER_PROJECT" [])
+          [Leaf $ Command "SAMPLERATE" ["44100", "0"], Leaf $ Command "LOCK" ["1"]])),
+
     it "parses project definition with child nodes"
       (assertParseResult
         "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>"
-        (Container
-          (Command "REAPER_PROJECT" [])
-          [
-            Container
-              (Command "CHILD" ["1"])
-              [
-                Leaf $ Command "CHILD_COMMAND" ["2"]
-              ]
-          ]
-        )
+        projectDefinitionWithChildren
+      ),
+
+    it "parses project definition with child nodes regardless of whitespace"
+      (assertParseResult
+        "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>"
+        projectDefinitionWithChildren
       )
   ]
+
+projectDefinitionWithChildren =
+  Container (Command "REAPER_PROJECT" [])
+    [
+      Container (Command "CHILD" ["1"])
+        [
+          Leaf (Command "CHILD_COMMAND" ["2"])
+        ]
+    ]
 
 {- TODO parameter types:
  - integers: 6 -1
