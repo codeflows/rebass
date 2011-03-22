@@ -13,30 +13,35 @@ parserSpecs = describe "Reaper project file parser" [
     it "parses minimal project definition"
       (assertParseResult
         "<REAPER_PROJECT\n>"
-        (Node (Command "REAPER_PROJECT" []) [])),
+        (Container
+          (Command "REAPER_PROJECT" [])
+          [])),
 
     it "parses minimal project definition with parameters"
       (assertParseResult
         "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>"
-        (Node (Command "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""]) [])),
+        (Container
+          (Command "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
+          [])),
 
     it "parses project definition with one command"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>"
-        (Node (Command "REAPER_PROJECT" [])
-                [Command "SAMPLERATE" ["44100", "0"]])),
+        (Container
+          (Command "REAPER_PROJECT" [])
+          [Command "SAMPLERATE" ["44100", "0"]])),
 
    it "parses project definition with many commands"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>"
-        (Node (Command "REAPER_PROJECT" [])
+        (Container (Command "REAPER_PROJECT" [])
                 [Command "SAMPLERATE" ["44100", "0"],
                  Command "LOCK" ["1"]])),
 
     it "parses project definition with child nodes"
       (assertParseResult
         "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>"
-        (Node (Command "REAPER_PROJECT" []) []))
+        (Container (Command "REAPER_PROJECT" []) []))
   ]
 
 {- TODO parameter types:
