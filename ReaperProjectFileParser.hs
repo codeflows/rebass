@@ -34,8 +34,7 @@ command = do
   return $ Command n p
 
 children :: CharParser st [Command]
-children = do
-  many commands
+children = many commands
   where
     commands = do
       many (char ' ')
