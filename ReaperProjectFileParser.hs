@@ -27,12 +27,14 @@ parseCommand = do
   p <- parseParameters
   return $ Command n p
 
+-- TODO this should return Nodes
 parseChildren :: CharParser st [Command]
 parseChildren = many commands
   where
     commands = do
       many (char ' ')
       parseCommand
+      -- TODO parse commands OR nodes here
 
 node :: CharParser st Node
 node = do
