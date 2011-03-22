@@ -76,14 +76,6 @@ reaperProjectHeader parameters = Container (Command "REAPER_PROJECT" parameters)
 emptyReaperProjectHeader = reaperProjectHeader []
 emptyReaperProject = emptyReaperProjectHeader []
 
-{- TODO parameter types:
- - integers: 6 -1
- - decimals: 1.000000000 -1.00000
- - strings:  "mah string"
- -}
--- TODO failure cases
--- TODO require that top-level tag actually is REAPER_PROJECT?
-
 shouldParseInto :: String -> Node -> HUnit.Assertion
 shouldParseInto input expected = do
   case parseProject input of
