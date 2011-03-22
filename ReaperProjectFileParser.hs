@@ -2,17 +2,17 @@
 
 module ReaperProjectFileParser (parseProject) where
 
-import ReaperProject
+import ReaperProject(Node(Container, Leaf), Command(Command))
 import Text.ParserCombinators.Parsec
 
-parseName :: CharParser st String
-parseName = many1 (letter <|> char '_')
+name :: CharParser st String
+name = many1 (letter <|> char '_')
 
 parameter :: CharParser st String
 parameter = many1 (noneOf " \n")
 
-parseParameters :: CharParser st [String]
-parseParameters = do
+parameters :: CharParser st [String]
+parameters = do
   p <- option [] parameterList
   newline
   return p
@@ -21,26 +21,26 @@ parseParameters = do
       char ' '
       sepBy1 parameter (char ' ')
 
-parseCommand :: CharParser st Command
-parseCommand = do
-  n <- parseName
-  p <- parseParameters
+command :: CharParser st Command
+command = do
+  n <- name
+  p <- parameters
   return $ Command n p
 
 -- TODO this should return Nodes
-parseChildren :: CharParser st [Command]
-parseChildren = many commands
+children :: CharParser st [Command]
+children = many commands
   where
     commands = do
       many (char ' ')
-      parseCommand
+      command
       -- TODO parse commands OR nodes here
 
 node :: CharParser st Node
 node = do
   char '<'
-  c <- parseCommand
-  cs <- parseChildren
+  c <- command
+  cs <- children
   char '>'
   return $ Container c cs
 
