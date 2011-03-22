@@ -53,20 +53,22 @@ parserSpecs = describe "Reaper project file parser" [
   ]
 
 projectDefinitionWithManyCommands =
-  Container (Command "REAPER_PROJECT" [])
+  emptyReaperProject
     [
       Leaf (Command "SAMPLERATE" ["44100", "0"]),
       Leaf (Command "LOCK" ["1"])
     ]
 
 projectDefinitionWithChildContainers =
-  Container (Command "REAPER_PROJECT" [])
+  emptyReaperProject
     [
       Container (Command "CHILD" ["1"])
         [
           Leaf (Command "CHILD_COMMAND" ["2"])
         ]
     ]
+
+emptyReaperProject = Container (Command "REAPER_PROJECT" [])
 
 {- TODO parameter types:
  - integers: 6 -1
