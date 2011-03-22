@@ -5,6 +5,6 @@ data Command =
      deriving (Show, Eq)
 
 data Node =
-     Container { command :: Command, children :: [Command] }
+     Container { command :: Command, children :: [Node] }
    | Leaf { command :: Command }
      deriving (Show, Eq)

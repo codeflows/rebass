@@ -36,9 +36,9 @@ parserSpecs = describe "Reaper project file parser" [
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>"
         (Container
           (Command "REAPER_PROJECT" [])
-          [Command "SAMPLERATE" ["44100", "0"], Command "LOCK" ["1"]]))
+          [Command "SAMPLERATE" ["44100", "0"], Command "LOCK" ["1"]])),
 
-{-    it "parses project definition with child nodes"
+    it "parses project definition with child nodes"
       (assertParseResult
         "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>"
         (Container
@@ -51,7 +51,7 @@ parserSpecs = describe "Reaper project file parser" [
               ]
           ]
         )
-      )-}
+      )
   ]
 
 {- TODO parameter types:
