@@ -5,6 +5,8 @@ module ParserSpec where
 import Test.Hspec
 import Test.Hspec.HUnit ()
 import qualified Test.HUnit as HUnit
+
+import ReaperProject
 import ReaperProjectFileParser
 
 parserSpecs = describe "Reaper project file parser" [

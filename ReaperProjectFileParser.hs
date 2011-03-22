@@ -1,24 +1,18 @@
 -- Attempt at parsing Reaper project files with Parsec
 
-module ReaperProjectFileParser(
-  Node(..),
-  Command(..),
-  parseProject) where
+module ReaperProjectFileParser (parseProject) where
 
+import ReaperProject
 import Text.ParserCombinators.Parsec
 
-data Command = Command String [String] deriving (Show, Eq)
-
-data Node = Node Command [Command] deriving (Show, Eq)
-
-name :: CharParser st String
-name = many1 (letter <|> char '_')
+parseName :: CharParser st String
+parseName = many1 (letter <|> char '_')
 
 parameter :: CharParser st String
 parameter = many1 (noneOf " \n")
 
-parameters :: CharParser st [String]
-parameters = do
+parseParameters :: CharParser st [String]
+parseParameters = do
   p <- option [] parameterList
   newline
   return p
@@ -27,26 +21,26 @@ parameters = do
       char ' '
       sepBy1 parameter (char ' ')
 
-command :: CharParser st Command
-command = do
-  n <- name
-  p <- parameters
+parseCommand :: CharParser st Command
+parseCommand = do
+  n <- parseName
+  p <- parseParameters
   return $ Command n p
 
-children :: CharParser st [Command]
-children = many commands
+parseChildren :: CharParser st [Command]
+parseChildren = many commands
   where
     commands = do
       many (char ' ')
-      command
+      parseCommand
 
 node :: CharParser st Node
 node = do
   char '<'
-  c <- command
-  cs <- children
+  c <- parseCommand
+  cs <- parseChildren
   char '>'
-  return $ Node c cs
+  return $ Container c cs
 
 parseProject :: String -> Either ParseError Node
 parseProject input = parse node "(no source file)" input
