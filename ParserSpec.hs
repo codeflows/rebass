@@ -30,7 +30,22 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>" `shouldParseInto` projectDefinitionWithChildContainers,
 
     it "parses project definition with child nodes regardless of whitespace" $
-      "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>" `shouldParseInto` projectDefinitionWithChildContainers
+      "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>" `shouldParseInto` projectDefinitionWithChildContainers,
+
+    it "parses dense project definition with three levels of nodes" $
+      "<REAPER_PROJECT\n<A\n<B\n<C D\n>>>>" `shouldParseInto`
+      (emptyReaperProjectHeader
+        [
+          Container (Command "A" [])
+          [
+            Container (Command "B" [])
+            [
+              Container (Command "C" ["D"])
+              []
+            ]
+          ]
+        ]
+      )
   ]
 
 projectDefinitionWithManyCommands =
