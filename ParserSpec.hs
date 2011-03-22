@@ -29,14 +29,14 @@ parserSpecs = describe "Reaper project file parser" [
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>"
         (Container
           (Command "REAPER_PROJECT" [])
-          [Command "SAMPLERATE" ["44100", "0"]])),
+          [Leaf $ Command "SAMPLERATE" ["44100", "0"]])),
 
    it "parses project definition with many commands"
       (assertParseResult
         "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>"
         (Container
           (Command "REAPER_PROJECT" [])
-          [Command "SAMPLERATE" ["44100", "0"], Command "LOCK" ["1"]])),
+          [Leaf $ Command "SAMPLERATE" ["44100", "0"], Leaf $ Command "LOCK" ["1"]])),
 
     it "parses project definition with child nodes"
       (assertParseResult
@@ -47,7 +47,7 @@ parserSpecs = describe "Reaper project file parser" [
             Container
               (Command "CHILD" ["1"])
               [
-                Command "CHILD_COMMAND" ["2"]
+                Leaf $ Command "CHILD_COMMAND" ["2"]
               ]
           ]
         )

@@ -27,20 +27,26 @@ command = do
   p <- parameters
   return $ Command n p
 
--- TODO this should return Nodes
-children :: CharParser st [Command]
-children = many commands
-  where
-    commands = do
-      many (char ' ')
-      command
-      -- TODO parse commands OR nodes here
+-- Parses a leaf command, i.e. a child node that's just a command
+leafCommand :: CharParser st Node
+leafCommand = do
+  c <- command
+  return $ Leaf c
+
+child :: CharParser st Node
+child = node <|> leafCommand
 
 node :: CharParser st Node
 node = do
   char '<'
   c <- command
-  cs <- children
+  -- TODO at this point, skip any leading whitespace (including newlines)
+  -- peek, if "<" then child node
+  -- if ">" then close current node
+  -- else must be a fjokin command
+  spaces
+  cs <- many child
+  --many (node <|> command)
   char '>'
   return $ Container c cs
 
