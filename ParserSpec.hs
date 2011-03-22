@@ -50,7 +50,10 @@ parserSpecs = describe "Reaper project file parser" [
       ),
 
     it "accepts digits in command names" $
-      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])])
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])]),
+
+    it "accepts carriage returns instead of newlines" $
+      "<REAPER_PROJECT\r>" `shouldParseInto` emptyReaperProject
   ]
 
 projectDefinitionWithManyCommands =

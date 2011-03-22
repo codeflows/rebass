@@ -20,6 +20,8 @@ parameters = do
     parameterList = do
       char ' '
       sepBy1 parameter (char ' ')
+    newline =
+      many1 (oneOf "\n\r")
 
 command :: CharParser st Command
 command = do
