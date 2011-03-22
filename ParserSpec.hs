@@ -10,57 +10,38 @@ import ReaperProject
 import ReaperProjectFileParser
 
 parserSpecs = describe "Reaper project file parser" [
-    it "parses minimal project definition"
-      (assertParseResult
-        "<REAPER_PROJECT\n>"
-        (Container
-          (Command "REAPER_PROJECT" [])
-          [])),
+    it "parses minimal project definition" $
+      "<REAPER_PROJECT\n>" `shouldParseInto` emptyReaperProject,
 
-    it "parses minimal project definition with parameters"
-      (assertParseResult
-        "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>"
-        (Container
-          (Command "REAPER_PROJECT" ["0.1", "\"3.73/OSX\""])
-          [])),
+    it "parses minimal project definition with parameters" $
+      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" `shouldParseInto` (reaperProjectHeader ["0.1", "\"3.73/OSX\""] []),
 
-    it "parses project definition with one command"
-      (assertParseResult
-        "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>"
-        (emptyReaperProject
-          [Leaf (Command "SAMPLERATE" ["44100", "0"])]
-        )),
+    it "parses project definition with one command" $
+      "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
+        (emptyReaperProjectHeader [Leaf (Command "SAMPLERATE" ["44100", "0"])]),
 
-   it "parses project definition with many commands"
-      (assertParseResult
-        "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>"
-        projectDefinitionWithManyCommands),
+    it "parses project definition with many commands" $
+      "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
 
-   it "parses project definition with many commands regardless of whitespace"
-      (assertParseResult
-        "<REAPER_PROJECT\nSAMPLERATE 44100 0\nLOCK 1\n>"
-        projectDefinitionWithManyCommands),
+    it "parses project definition with many commands regardless of whitespace" $
+      "<REAPER_PROJECT\nSAMPLERATE 44100 0\nLOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
 
-    it "parses project definition with child nodes"
-      (assertParseResult
-        "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>"
-        projectDefinitionWithChildContainers),
+    it "parses project definition with child nodes" $
+      "<REAPER_PROJECT\n  <CHILD 1\n    CHILD_COMMAND 2\n  >\n>" `shouldParseInto` projectDefinitionWithChildContainers,
 
-    it "parses project definition with child nodes regardless of whitespace"
-      (assertParseResult
-        "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>"
-        projectDefinitionWithChildContainers)
+    it "parses project definition with child nodes regardless of whitespace" $
+      "<REAPER_PROJECT\n<CHILD 1\nCHILD_COMMAND 2\n>\n>" `shouldParseInto` projectDefinitionWithChildContainers
   ]
 
 projectDefinitionWithManyCommands =
-  emptyReaperProject
+  emptyReaperProjectHeader
     [
       Leaf (Command "SAMPLERATE" ["44100", "0"]),
       Leaf (Command "LOCK" ["1"])
     ]
 
 projectDefinitionWithChildContainers =
-  emptyReaperProject
+  emptyReaperProjectHeader
     [
       Container (Command "CHILD" ["1"])
         [
@@ -68,7 +49,9 @@ projectDefinitionWithChildContainers =
         ]
     ]
 
-emptyReaperProject = Container (Command "REAPER_PROJECT" [])
+reaperProjectHeader parameters = Container (Command "REAPER_PROJECT" parameters)
+emptyReaperProjectHeader = reaperProjectHeader []
+emptyReaperProject = emptyReaperProjectHeader []
 
 {- TODO parameter types:
  - integers: 6 -1
@@ -77,8 +60,8 @@ emptyReaperProject = Container (Command "REAPER_PROJECT" [])
  -}
 -- TODO failure cases
 
-assertParseResult :: String -> Node -> HUnit.Assertion
-assertParseResult input expected = do
+shouldParseInto :: String -> Node -> HUnit.Assertion
+shouldParseInto input expected = do
   case parseProject input of
     Left error -> HUnit.assertFailure $ show error
     Right node -> HUnit.assertEqual "parse result" expected node
