@@ -7,6 +7,9 @@ import Text.ParserCombinators.Parsec
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [String] }
 
+withNameAndParameters :: (String -> [String] -> t) -> NameAndParameters -> t
+withNameAndParameters f np = f (name' np) (parameters' np)
+
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
@@ -41,7 +44,7 @@ nameAndParameters = do
 command :: CharParser st Node
 command = do
   np <- nameAndParameters
-  return $ Command (name' np) (parameters' np)
+  return $ Command `withNameAndParameters` np
 
 children :: CharParser st [Node]
 children = do
@@ -52,9 +55,9 @@ node = do
   char '<'
   np <- nameAndParameters
   spaces
-  cs <- children
+  children <- children
   char '>'
-  return $ Container (name' np) (parameters' np) cs
+  return $ (Container `withNameAndParameters` np) children
 
 project :: CharParser st Node
 project = node
