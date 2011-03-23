@@ -2,3 +2,4 @@
 - Parse parameters as correct data types (integers, floats, strings)
 - Support chunks of data inside nodes (they seem base64-encoded?)
 - Acceptance tests: parse -> serialize -> compare to original for actual Reaper project files
+- Split stuff under src/ and test/
