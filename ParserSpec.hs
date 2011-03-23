@@ -16,7 +16,10 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\n>" `shouldParseInto` emptyReaperProject,
 
     it "parses minimal project definition with parameters" $
-      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" `shouldParseInto` (reaperProjectHeader ["0.1", "3.73/OSX"] []),
+      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\n>" `shouldParseInto` emptyReaperProjectWithVersions,
+
+    it "accepts carriage returns instead of newlines" $
+      "<REAPER_PROJECT 0.1 \"3.73/OSX\"\r>" `shouldParseInto` emptyReaperProjectWithVersions,
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
@@ -45,10 +48,7 @@ parserSpecs = describe "Reaper project file parser" [
         ],
 
     it "accepts digits in command names" $
-      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Command "RENDER_1X" ["0"]]),
-
-    it "accepts carriage returns instead of newlines" $
-      "<REAPER_PROJECT 0.1\r>" `shouldParseInto` (reaperProjectHeader ["0.1"] []),
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" ["0"]],
 
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
@@ -72,6 +72,7 @@ projectDefinitionWithChildContainers =
 
 reaperProjectHeader parameters = Container "REAPER_PROJECT" parameters
 emptyReaperProjectHeader = reaperProjectHeader []
+emptyReaperProjectWithVersions = reaperProjectHeader ["0.1", "3.73/OSX"] []
 emptyReaperProject = emptyReaperProjectHeader []
 
 shouldParseInto :: String -> Node -> HUnit.Assertion
