@@ -23,7 +23,7 @@ parserSpecs = describe "Reaper project file parser" [
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
-        (emptyReaperProjectHeader [Command "SAMPLERATE" ["44100", "0"]]),
+        (emptyReaperProjectHeader [Command "SAMPLERATE" [String "44100", String "0"]]),
 
     it "parses project definition with many commands" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
@@ -42,37 +42,37 @@ parserSpecs = describe "Reaper project file parser" [
         emptyReaperProjectHeader [
           Container "A" [] [
             Container "B" [] [
-              Container "C" ["D"] []
+              Container "C" [String "D"] []
             ]
           ]
         ],
 
     it "accepts digits in command names" $
-      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" ["0"]],
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" [String "0"]],
 
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
         emptyReaperProjectHeader [
-          Command "MARKER" ["2", "31.30434782608696", "Verse 1", "0"]
+          Command "MARKER" [String "2", String "31.30434782608696", String "Verse 1", String "0"]
         ]
   ]
 
 projectDefinitionWithManyCommands =
   emptyReaperProjectHeader [
-    Command "SAMPLERATE" ["44100", "0"],
-    Command "LOCK" ["1"]
+    Command "SAMPLERATE" [String "44100", String "0"],
+    Command "LOCK" [String "1"]
   ]
 
 projectDefinitionWithChildContainers =
   emptyReaperProjectHeader [
-    Container "CHILD" ["1"] [
-      Command "CHILD_COMMAND" ["2"]
+    Container "CHILD" [String "1"] [
+      Command "CHILD_COMMAND" [String "2"]
     ]
   ]
 
 reaperProjectHeader parameters = Container "REAPER_PROJECT" parameters
 emptyReaperProjectHeader = reaperProjectHeader []
-emptyReaperProjectWithVersions = reaperProjectHeader ["0.1", "3.73/OSX"] []
+emptyReaperProjectWithVersions = reaperProjectHeader [String "0.1", String "3.73/OSX"] []
 emptyReaperProject = emptyReaperProjectHeader []
 
 shouldParseInto :: String -> Node -> HUnit.Assertion

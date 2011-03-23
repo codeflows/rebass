@@ -2,27 +2,31 @@
 
 module ReaperProjectFileParser (project) where
 
-import ReaperProject(Node(Container, Command))
+import ReaperProject(Node(Container, Command), Parameter(..))
 import Text.ParserCombinators.Parsec
 
-data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [String] }
+data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
-withNameAndParameters :: (String -> [String] -> t) -> NameAndParameters -> t
+withNameAndParameters :: (String -> [Parameter] -> t) -> NameAndParameters -> t
 withNameAndParameters f np = f (name' np) (parameters' np)
 
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
-parameter :: CharParser st String
-parameter =
-      -- TODO this will probably accepts newlines inside quotes as well
-      between quote quote (many $ noneOf "\"")
-      -- TODO duplication
-  <|> many1 (noneOf " \n\r")
-      where
-        quote = char '"'
+parameter :: CharParser st Parameter
+parameter = do
+  s <- stringParameter
+  return $ String s
+    where
+      stringParameter = 
+        -- TODO this will probably accepts newlines inside quotes as well
+           between quote quote (many $ noneOf "\"")
+        -- TODO duplication
+       <|> many1 (noneOf " \n\r")
+           where
+             quote = char '"'
 
-parameters :: CharParser st [String]
+parameters :: CharParser st [Parameter]
 parameters = do
   p <- option [] parameterList
   newline

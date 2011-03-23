@@ -7,6 +7,7 @@ module ReaperProject (
 data Parameter =
     String String
   | Integer Integer
+  -- TODO precision?
   | Decimal Float
     deriving (Show, Eq)
 
@@ -17,11 +18,21 @@ data Node =
 
 -- TODO cleanup plz
 serialize :: Node -> String
-serialize = print 0
+serialize = serialize' 0
+
+serialize' i (Command n p) = indent i ++ command n p
+serialize' i (Container n p c) =
+  indent i ++
+  "<" ++
+  command n p ++
+  children (i+2) c ++
+  indent i ++
+  ">\n"
   where
-    print i (Command n p) = indent i ++ command n p
-    print i (Container n p c) = indent i ++ "<" ++ command n p ++ children (i+2) c ++ indent i ++ ">\n"
-    children i = concat . (map (print i))
-    command n p = unwords (n:(map show p)) ++ "\n"
-    indent i = replicate i ' '
+    children i = concat . (map (serialize' i))
+
+command n p = unwords (n:(map parameter p)) ++ "\n"
+parameter :: Parameter -> String
+parameter (String s) = s
+indent i = replicate i ' '
 
