@@ -9,9 +9,11 @@ data Node =
      deriving (Show, Eq)
 
 serialize :: Node -> String
-serialize (Command name parameters) = command name parameters
-serialize (Container name parameters children) = "<" ++ command name parameters ++ ">"
+serialize (Command n p) = command n p
+serialize (Container n p c) = "<" ++ command n p ++ children c ++ ">\n"
+  where
+    children = concat . (map serialize)
 
 command :: String -> [String] -> String
-command n p = unwords(n:p) ++ "\n"
+command n p = unwords (n:p) ++ "\n"
 
