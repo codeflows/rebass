@@ -9,11 +9,11 @@ data Node =
      deriving (Show, Eq)
 
 serialize :: Node -> String
-serialize (Command n p) = command n p
-serialize (Container n p c) = "<" ++ command n p ++ children c ++ ">\n"
+serialize = print 0
   where
-    children = concat . (map serialize)
-
-command :: String -> [String] -> String
-command n p = unwords (n:p) ++ "\n"
+    print i (Command n p) = indent i ++ command n p
+    print i (Container n p c) = indent i ++ "<" ++ command n p ++ children (i+2) c ++ indent i ++ ">\n"
+    children i = concat . (map (print i))
+    command n p = unwords (n:p) ++ "\n"
+    indent i = replicate i ' '
 
