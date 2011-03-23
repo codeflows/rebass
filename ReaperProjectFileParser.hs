@@ -3,7 +3,7 @@
 module ReaperProjectFileParser (project) where
 
 import ReaperProject(Node(Container, Command), Parameter(..))
-import Text.ParserCombinators.Parsec hiding (string)
+import Text.ParserCombinators.Parsec
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
@@ -13,29 +13,34 @@ withNameAndParameters f np = f (name' np) (parameters' np)
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
-string :: CharParser st Parameter
-string = do
+string' :: CharParser st Parameter
+string' = do
   s <- between quote quote (many $ noneOf "\"")
   return $ String s
   where
     quote = char '"'
 
+sign :: CharParser st String
+sign = option "" (string "-")
+
 decimal :: CharParser st Parameter
 decimal = try decimal'
   where
     decimal' = do
+      sign <- sign
       a <- many1 digit
       char '.'
       b <- many1 digit
-      return $ Decimal (read (a ++ "." ++ b) :: Float)
+      return $ Decimal (read (sign ++ a ++ '.' : b) :: Float)
 
 integer :: CharParser st Parameter
 integer = do
+  sign <- sign
   i <- many1 digit
-  return $ Integer (read i :: Integer)
+  return $ Integer (read (sign ++ i) :: Integer)
 
 parameter :: CharParser st Parameter
-parameter = string <|> decimal <|> integer
+parameter = decimal <|> integer <|> string'
 
 parameters :: CharParser st [Parameter]
 parameters = do
