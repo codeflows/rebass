@@ -2,8 +2,10 @@
 
 module ReaperProjectFileParser (project) where
 
-import ReaperProject(Node(Container, Leaf), Command(Command))
+import ReaperProject(Node(Container, Command))
 import Text.ParserCombinators.Parsec
+
+data NameAndParameters = NameAndParameters { n :: String, p :: [String] }
 
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
@@ -30,29 +32,29 @@ parameters = do
       -- TODO not exactly correct, should be a combination of these
       many1 (oneOf "\n\r")
 
-command :: CharParser st Command
-command = do
+nameAndParameters :: CharParser st NameAndParameters
+nameAndParameters = do
   n <- name
   p <- parameters
-  return $ Command n p
+  return $ NameAndParameters n p
 
-leafCommand :: CharParser st Node
-leafCommand = do
-  c <- command
-  return $ Leaf c
+command :: CharParser st Node
+command = do
+  c <- nameAndParameters
+  return $ Command (n c) (p c)
 
 children :: CharParser st [Node]
 children = do
-  endBy (node <|> leafCommand) spaces
+  endBy (node <|> command) spaces
 
 node :: CharParser st Node
 node = do
   char '<'
-  c <- command
+  c <- nameAndParameters
   spaces
   cs <- children
   char '>'
-  return $ Container c cs
+  return $ Container (n c) (p c) cs
 
 project :: CharParser st Node
 project = node

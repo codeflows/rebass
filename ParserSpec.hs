@@ -20,7 +20,7 @@ parserSpecs = describe "Reaper project file parser" [
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
-        (emptyReaperProjectHeader [Leaf (Command "SAMPLERATE" ["44100", "0"])]),
+        (emptyReaperProjectHeader [Command "SAMPLERATE" ["44100", "0"]]),
 
     it "parses project definition with many commands" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
@@ -36,51 +36,41 @@ parserSpecs = describe "Reaper project file parser" [
 
     it "parses dense project definition with three levels of nodes" $
       "<REAPER_PROJECT\n<A\n<B\n<C D\n>>>>" `shouldParseInto`
-      (emptyReaperProjectHeader
-        [
-          Container (Command "A" [])
-          [
-            Container (Command "B" [])
-            [
-              Container (Command "C" ["D"])
-              []
+        emptyReaperProjectHeader [
+          Container "A" [] [
+            Container "B" [] [
+              Container "C" ["D"] []
             ]
           ]
-        ]
-      ),
+        ],
 
     it "accepts digits in command names" $
-      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Leaf (Command "RENDER_1X" ["0"])]),
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` (emptyReaperProjectHeader [Command "RENDER_1X" ["0"]]),
 
     it "accepts carriage returns instead of newlines" $
       "<REAPER_PROJECT 0.1\r>" `shouldParseInto` (reaperProjectHeader ["0.1"] []),
 
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
-        (emptyReaperProjectHeader
-          [
-            Leaf (Command "MARKER" ["2", "31.30434782608696", "Verse 1", "0"])
-          ]
-        )
+        emptyReaperProjectHeader [
+          Command "MARKER" ["2", "31.30434782608696", "Verse 1", "0"]
+        ]
   ]
 
 projectDefinitionWithManyCommands =
-  emptyReaperProjectHeader
-    [
-      Leaf (Command "SAMPLERATE" ["44100", "0"]),
-      Leaf (Command "LOCK" ["1"])
-    ]
+  emptyReaperProjectHeader [
+      Command "SAMPLERATE" ["44100", "0"],
+      Command "LOCK" ["1"]
+  ]
 
 projectDefinitionWithChildContainers =
-  emptyReaperProjectHeader
-    [
-      Container (Command "CHILD" ["1"])
-        [
-          Leaf (Command "CHILD_COMMAND" ["2"])
-        ]
+  emptyReaperProjectHeader [
+    Container "CHILD" ["1"] [
+      Command "CHILD_COMMAND" ["2"]
     ]
+  ]
 
-reaperProjectHeader parameters = Container (Command "REAPER_PROJECT" parameters)
+reaperProjectHeader parameters = Container "REAPER_PROJECT" parameters
 emptyReaperProjectHeader = reaperProjectHeader []
 emptyReaperProject = emptyReaperProjectHeader []
 
