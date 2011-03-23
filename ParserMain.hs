@@ -1,4 +1,5 @@
 import ReaperProjectFileParser
+import ReaperProject
 import System.Environment(getArgs)
 import Text.ParserCombinators.Parsec(parseFromFile)
 
@@ -8,5 +9,5 @@ parse [file] = do
   result <- parseFromFile project file
   case result of
     Left err  -> print err
-    Right xs  -> print xs
+    Right project  -> putStrLn (serialize project)
 
