@@ -23,7 +23,7 @@ parserSpecs = describe "Reaper project file parser" [
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
-        (emptyReaperProjectHeader [Command "SAMPLERATE" [String "44100", String "0"]]),
+        (emptyReaperProjectHeader [Command "SAMPLERATE" [Integer 44100, Integer 0]]),
 
     it "parses project definition with many commands" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
@@ -48,25 +48,25 @@ parserSpecs = describe "Reaper project file parser" [
         ],
 
     it "accepts digits in command names" $
-      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" [String "0"]],
+      "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" [Integer 0]],
 
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
         emptyReaperProjectHeader [
-          Command "MARKER" [String "2", String "31.30434782608696", String "Verse 1", String "0"]
+          Command "MARKER" [Integer 2, String "31.30434782608696", String "Verse 1", Integer 0]
         ]
   ]
 
 projectDefinitionWithManyCommands =
   emptyReaperProjectHeader [
-    Command "SAMPLERATE" [String "44100", String "0"],
-    Command "LOCK" [String "1"]
+    Command "SAMPLERATE" [Integer 44100, Integer 0],
+    Command "LOCK" [Integer 1]
   ]
 
 projectDefinitionWithChildContainers =
   emptyReaperProjectHeader [
-    Container "CHILD" [String "1"] [
-      Command "CHILD_COMMAND" [String "2"]
+    Container "CHILD" [Integer 1] [
+      Command "CHILD_COMMAND" [Integer 2]
     ]
   ]
 

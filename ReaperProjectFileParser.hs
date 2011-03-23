@@ -22,8 +22,8 @@ string = do
 
 integer :: CharParser st Parameter
 integer = do
-  s <- many1 (noneOf " \n\r")
-  return $ String s
+  i <- many1 digit
+  return $ Integer (read i :: Integer)
 
 parameter :: CharParser st Parameter
 parameter = string <|> integer
