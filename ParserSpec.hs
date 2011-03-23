@@ -59,8 +59,8 @@ parserSpecs = describe "Reaper project file parser" [
 
 projectDefinitionWithManyCommands =
   emptyReaperProjectHeader [
-      Command "SAMPLERATE" ["44100", "0"],
-      Command "LOCK" ["1"]
+    Command "SAMPLERATE" ["44100", "0"],
+    Command "LOCK" ["1"]
   ]
 
 projectDefinitionWithChildContainers =
