@@ -3,7 +3,7 @@
 module ReaperProjectFileParser (project) where
 
 import ReaperProject(Node(Container, Command), Parameter(..))
-import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec hiding (string)
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
@@ -13,18 +13,20 @@ withNameAndParameters f np = f (name' np) (parameters' np)
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
-parameter :: CharParser st Parameter
-parameter = do
-  s <- stringParameter
+string :: CharParser st Parameter
+string = do
+  s <- between quote quote (many $ noneOf "\"")
   return $ String s
-    where
-      stringParameter = 
-        -- TODO this will probably accepts newlines inside quotes as well
-           between quote quote (many $ noneOf "\"")
-        -- TODO duplication
-       <|> many1 (noneOf " \n\r")
-           where
-             quote = char '"'
+  where
+    quote = char '"'
+
+integer :: CharParser st Parameter
+integer = do
+  s <- many1 (noneOf " \n\r")
+  return $ String s
+
+parameter :: CharParser st Parameter
+parameter = string <|> integer
 
 parameters :: CharParser st [Parameter]
 parameters = do
