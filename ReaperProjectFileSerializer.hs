@@ -15,7 +15,10 @@ serialize' i (Container n p c) =
     children i = concat . (map (serialize' i))
 
 command n p = unwords (n:(map parameter p)) ++ "\n"
-parameter :: Parameter -> String
-parameter (String s) = s
 indent i = replicate i ' '
+
+parameter :: Parameter -> String
+parameter (String s) = "\"" ++ s ++ "\""
+parameter (Integer i) = show i
+parameter (Decimal d) = show d
 
