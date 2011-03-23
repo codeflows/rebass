@@ -20,13 +20,22 @@ string = do
   where
     quote = char '"'
 
+decimal :: CharParser st Parameter
+decimal = try decimal'
+  where
+    decimal' = do
+      a <- many1 digit
+      char '.'
+      b <- many1 digit
+      return $ Decimal (read (a ++ "." ++ b) :: Float)
+
 integer :: CharParser st Parameter
 integer = do
   i <- many1 digit
   return $ Integer (read i :: Integer)
 
 parameter :: CharParser st Parameter
-parameter = string <|> integer
+parameter = string <|> decimal <|> integer
 
 parameters :: CharParser st [Parameter]
 parameters = do
