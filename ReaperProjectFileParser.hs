@@ -40,8 +40,8 @@ nameAndParameters = do
 
 command :: CharParser st Node
 command = do
-  c <- nameAndParameters
-  return $ Command (name' c) (parameters' c)
+  np <- nameAndParameters
+  return $ Command (name' np) (parameters' np)
 
 children :: CharParser st [Node]
 children = do
@@ -50,11 +50,11 @@ children = do
 node :: CharParser st Node
 node = do
   char '<'
-  c <- nameAndParameters
+  np <- nameAndParameters
   spaces
   cs <- children
   char '>'
-  return $ Container (name' c) (parameters' c) cs
+  return $ Container (name' np) (parameters' np) cs
 
 project :: CharParser st Node
 project = node
