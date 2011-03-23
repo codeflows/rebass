@@ -5,7 +5,7 @@ module ReaperProjectFileParser (project) where
 import ReaperProject(Node(Container, Command))
 import Text.ParserCombinators.Parsec
 
-data NameAndParameters = NameAndParameters { n :: String, p :: [String] }
+data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [String] }
 
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
@@ -41,7 +41,7 @@ nameAndParameters = do
 command :: CharParser st Node
 command = do
   c <- nameAndParameters
-  return $ Command (n c) (p c)
+  return $ Command (name' c) (parameters' c)
 
 children :: CharParser st [Node]
 children = do
@@ -54,7 +54,7 @@ node = do
   spaces
   cs <- children
   char '>'
-  return $ Container (n c) (p c) cs
+  return $ Container (name' c) (parameters' c) cs
 
 project :: CharParser st Node
 project = node
