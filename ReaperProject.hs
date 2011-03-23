@@ -1,6 +1,7 @@
 module ReaperProject(Node(..)) where
 
 data Node =
-     Container { name :: String, parameters :: [String], children :: [Node] }
-   | Leaf { name :: String, parameters :: [String] :: Command }
+     Container { command :: String, parameters :: [String], children :: [Node] }
+-- TODO Leaf -> Command?
+   | Leaf { command :: String, parameters :: [String] }
      deriving (Show, Eq)
