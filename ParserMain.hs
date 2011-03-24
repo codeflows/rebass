@@ -10,4 +10,3 @@ parse [file] = do
   case result of
     Left err  -> print err
     Right project  -> putStrLn (serialize project)
-
