@@ -1,5 +1,6 @@
-- Project file serializer
-- Parse parameters as correct data types (integers, floats, strings)
+- Parser numbers as Numbers that just retain the original string as
+  their content (to retain precision). These can be then converted to
+  actual numbers if need be.
 - Support chunks of data inside nodes (they seem base64-encoded?)
 - Acceptance tests: parse -> serialize -> compare to original for actual Reaper project files
 - Split stuff under src/ and test/
