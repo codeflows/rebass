@@ -3,7 +3,12 @@ module ReaperProjectFileSerializer (serialize) where
 import ReaperProject
 
 serialize :: Node -> String
-serialize = serialize' 0
+serialize = removeTrailingNewLine . (serialize' 0)
+  where
+    -- TODO is there a builtin function for this?
+    removeTrailingNewLine s
+      | last s == '\n' = init s
+      | otherwise      = s
 
 serialize' i (Command n p) =
   indent i ++ command n p
