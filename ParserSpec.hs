@@ -53,11 +53,11 @@ parserSpecs = describe "Reaper project file parser" [
     it "parses string literals" $
       "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
         emptyReaperProjectHeader [
-          Command "MARKER" [Integer 2, Decimal 31.30434782608696, String "Verse 1", Integer 0]
+          Command "MARKER" [Integer 2, Decimal "31.30434782608696", String "Verse 1", Integer 0]
         ],
 
     it "parses negative decimals" $
-      "<REAPER_PROJECT -0.1\n>" `shouldParseInto` reaperProjectHeader [Decimal (-0.1)] [],
+      "<REAPER_PROJECT -0.1\n>" `shouldParseInto` reaperProjectHeader [Decimal "-0.1"] [],
 
     it "parses negative integers" $
       "<REAPER_PROJECT -10\n>" `shouldParseInto` reaperProjectHeader [Integer (-10)] []
@@ -78,7 +78,7 @@ projectDefinitionWithChildContainers =
 
 reaperProjectHeader = Container "REAPER_PROJECT"
 emptyReaperProjectHeader = reaperProjectHeader []
-emptyReaperProjectWithVersions = reaperProjectHeader [Decimal 0.1, String "3.73/OSX"] []
+emptyReaperProjectWithVersions = reaperProjectHeader [Decimal "0.1", String "3.73/OSX"] []
 emptyReaperProject = emptyReaperProjectHeader []
 
 shouldParseInto :: String -> Node -> HUnit.Assertion

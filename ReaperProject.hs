@@ -6,8 +6,7 @@ module ReaperProject (
 data Parameter =
     String String
   | Integer Integer
-  -- TODO precision?
-  | Decimal Float
+  | Decimal String
     deriving (Show, Eq)
 
 data Node =

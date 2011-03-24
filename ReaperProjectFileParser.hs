@@ -20,22 +20,22 @@ string' = do
   where
     quote = char '"'
 
-sign :: CharParser st String
-sign = option "" (string "-")
+maybeMinusSign :: CharParser st String
+maybeMinusSign = option "" (string "-")
 
 decimal :: CharParser st Parameter
 decimal = try decimal'
   where
     decimal' = do
-      sign <- sign
+      sign <- maybeMinusSign
       a <- many1 digit
       char '.'
       b <- many1 digit
-      return $ Decimal (read (sign ++ a ++ '.' : b) :: Float)
+      return $ Decimal (sign ++ a ++ '.' : b)
 
 integer :: CharParser st Parameter
 integer = do
-  sign <- sign
+  sign <- maybeMinusSign
   i <- many1 digit
   return $ Integer (read (sign ++ i) :: Integer)
 
@@ -52,7 +52,6 @@ parameters = do
       char ' '
       sepBy1 parameter (char ' ')
     newline =
-      -- TODO not exactly correct, should be a combination of these
       many1 (oneOf "\n\r")
 
 nameAndParameters :: CharParser st NameAndParameters

@@ -24,5 +24,5 @@ command n p = unwords (n:(map parameter p)) ++ "\n"
 parameter :: Parameter -> String
 parameter (String s) = "\"" ++ s ++ "\""
 parameter (Integer i) = show i
-parameter (Decimal d) = show d
+parameter (Decimal d) = d
 
