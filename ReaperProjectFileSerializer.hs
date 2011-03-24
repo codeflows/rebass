@@ -1,4 +1,3 @@
--- TODO clean up
 module ReaperProjectFileSerializer (serialize) where
 
 import ReaperProject
@@ -6,17 +5,21 @@ import ReaperProject
 serialize :: Node -> String
 serialize = serialize' 0
 
-serialize' i (Command n p) = indent i ++ command n p
+serialize' i (Command n p) =
+  indent i ++ command n p
 serialize' i (Container n p c) =
   indent i ++ "<" ++ command n p ++
-    children (i+2) c ++
+    children (i + 2) c ++
   indent i ++ ">\n"
 
+indent :: Int -> String
+indent i = replicate i ' '
+
+children :: Int -> [Node] -> String
 children i = concat . (map (serialize' i))
 
+command :: String -> [Parameter] -> String
 command n p = unwords (n:(map parameter p)) ++ "\n"
-
-indent i = replicate i ' '
 
 parameter :: Parameter -> String
 parameter (String s) = "\"" ++ s ++ "\""
