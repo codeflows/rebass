@@ -11,10 +11,11 @@ serialize' i (Container n p c) =
   indent i ++ "<" ++ command n p ++
     children (i+2) c ++
   indent i ++ ">\n"
-  where
-    children i = concat . (map (serialize' i))
+
+children i = concat . (map (serialize' i))
 
 command n p = unwords (n:(map parameter p)) ++ "\n"
+
 indent i = replicate i ' '
 
 parameter :: Parameter -> String
