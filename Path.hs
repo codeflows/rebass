@@ -1,6 +1,7 @@
 module Path where
 
-import Data.List 
+import Data.List  
+import StringUtil
 
 type Path = String   
 
@@ -15,3 +16,6 @@ parentOf parent child = (pathOf parent) ++ "/" `elem` inits (pathOf child)
 
 subPath :: Path -> Path -> Path
 subPath root sub = root ++ "/" ++ sub
+
+lastPathElement :: Path -> Path
+lastPathElement path = head $ reverse $ split '/' path
