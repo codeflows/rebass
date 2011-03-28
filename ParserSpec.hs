@@ -76,6 +76,12 @@ parserSpecs = describe "Reaper project file parser" [
               [Command "TRACKID" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]]
           ],
 
+    -- TODO Another data type?
+    it "parses string identifier parameters" $
+      "<SOURCE WAVE\nFILE \"02-110328_2314.wav\"\n>" `shouldParseInto`
+        Container "SOURCE" [String "WAVE"]
+          [Command "FILE" [String "02-110328_2314.wav"]],
+
     it "parses negative decimals" $
       "<REAPER_PROJECT -0.1\n>" `shouldParseInto` reaperProjectHeader [Decimal "-0.1"] [],
 
