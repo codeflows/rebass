@@ -56,6 +56,12 @@ parserSpecs = describe "Reaper project file parser" [
           Command "MARKER" [Integer 2, Decimal "31.30434782608696", String "Verse 1", Integer 0]
         ],
 
+    it "parses string literals with single quotes" $
+      "<REAPER_PROJECT\nMARKER 1 1.00000000000000 'The \"Hit\" Chorus' 0\n" `shouldParseInto`
+        emptyReaperProjectHeader [
+          Command "MARKER" [Integer 1, Decimal "1.00000000000000", String "The \"Hit\" Chorus", Integer 0]
+        ],
+
     it "parses negative decimals" $
       "<REAPER_PROJECT -0.1\n>" `shouldParseInto` reaperProjectHeader [Decimal "-0.1"] [],
 
