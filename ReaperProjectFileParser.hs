@@ -7,32 +7,50 @@ import Text.ParserCombinators.Parsec
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
-withNameAndParameters :: (String -> [Parameter] -> t) -> NameAndParameters -> t
-withNameAndParameters f np = f (name' np) (parameters' np)
+project :: CharParser st Project
+project = node
+
+node :: CharParser st Node
+node = do
+  char '<'
+  np <- nameAndParameters
+  spaces
+  children <- children
+  char '>'
+  return $ (Container `withNameAndParameters` np) children
+
+nameAndParameters :: CharParser st NameAndParameters
+nameAndParameters = do
+  n <- name
+  p <- parameters
+  return $ NameAndParameters n p
+
+children :: CharParser st [Node]
+children = do
+  endBy (node <|> command) spaces
+
+command :: CharParser st Node
+command = do
+  np <- nameAndParameters
+  return $ Command `withNameAndParameters` np
 
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
-guid :: CharParser st Parameter
-guid = do
-  s <- between' '{' '}'
-  return $ String ("{" ++ s ++ "}")
-
-between' :: Char -> Char -> CharParser st String
-between' start end = between (char start) (char end) (many $ notChar end)
+parameters :: CharParser st [Parameter]
+parameters = do
+  p <- option [] parameterList
+  newline
+  return p
   where
-    -- TODO does Parsec REALLY not have this function itself?
-    notChar c = satisfy (/=c) <?> show [c]
+    parameterList = do
+      char ' '
+      sepBy1 parameter (char ' ')
+    newline =
+      many1 (oneOf "\n\r")
 
-string' :: CharParser st Parameter
-string' = do
-  s <- betweenQuotes '\'' <|> betweenQuotes '\"'
-  return $ String s
-  where
-    betweenQuotes quoteChar = between' quoteChar quoteChar
-
-maybeMinusSign :: CharParser st String
-maybeMinusSign = option "" (string "-")
+parameter :: CharParser st Parameter
+parameter = decimal <|> integer <|> string' <|> guid
 
 decimal :: CharParser st Parameter
 decimal = try decimal'
@@ -50,44 +68,27 @@ integer = do
   i <- many1 digit
   return $ Integer (read (sign ++ i) :: Integer)
 
-parameter :: CharParser st Parameter
-parameter = decimal <|> integer <|> string' <|> guid
+maybeMinusSign :: CharParser st String
+maybeMinusSign = option "" (string "-")
 
-parameters :: CharParser st [Parameter]
-parameters = do
-  p <- option [] parameterList
-  newline
-  return p
+string' :: CharParser st Parameter
+string' = do
+  s <- betweenQuotes '\'' <|> betweenQuotes '\"'
+  return $ String s
   where
-    parameterList = do
-      char ' '
-      sepBy1 parameter (char ' ')
-    newline =
-      many1 (oneOf "\n\r")
+    betweenQuotes quoteChar = between' quoteChar quoteChar
 
-nameAndParameters :: CharParser st NameAndParameters
-nameAndParameters = do
-  n <- name
-  p <- parameters
-  return $ NameAndParameters n p
+guid :: CharParser st Parameter
+guid = do
+  s <- between' '{' '}'
+  return $ String ("{" ++ s ++ "}")
 
-command :: CharParser st Node
-command = do
-  np <- nameAndParameters
-  return $ Command `withNameAndParameters` np
+between' :: Char -> Char -> CharParser st String
+between' start end = between (char start) (char end) (many $ notChar end)
+  where
+    -- TODO does Parsec REALLY not have this function itself?
+    notChar c = satisfy (/=c) <?> show [c]
 
-children :: CharParser st [Node]
-children = do
-  endBy (node <|> command) spaces
+withNameAndParameters :: (String -> [Parameter] -> t) -> NameAndParameters -> t
+withNameAndParameters f np = f (name' np) (parameters' np)
 
-node :: CharParser st Node
-node = do
-  char '<'
-  np <- nameAndParameters
-  spaces
-  children <- children
-  char '>'
-  return $ (Container `withNameAndParameters` np) children
-
-project :: CharParser st Project
-project = node
