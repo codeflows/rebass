@@ -15,21 +15,21 @@ name = many1 (letter <|> digit <|> char '_')
 
 guid :: CharParser st Parameter
 guid = do
-  char '{'
-  s <- many (noneOf "}")
-  char '}'
+  s <- between' '{' '}'
   return $ String ("{" ++ s ++ "}")
 
-betweenQuotes :: Char -> CharParser st String
-betweenQuotes quoteChar = between quote quote (many notQuote)
+between' :: Char -> Char -> CharParser st String
+between' start end = between (char start) (char end) (many $ notChar end)
   where
-    quote = char quoteChar
-    notQuote = noneOf $ quoteChar : []
+    -- TODO does Parsec REALLY not have this function itself?
+    notChar c = satisfy (/=c) <?> show [c]
 
 string' :: CharParser st Parameter
 string' = do
   s <- betweenQuotes '\'' <|> betweenQuotes '\"'
   return $ String s
+  where
+    betweenQuotes quoteChar = between' quoteChar quoteChar
 
 maybeMinusSign :: CharParser st String
 maybeMinusSign = option "" (string "-")
