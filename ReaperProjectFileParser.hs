@@ -15,10 +15,10 @@ name = many1 (letter <|> digit <|> char '_')
 
 string' :: CharParser st Parameter
 string' = do
-  s <- between quote quote (many $ noneOf "\"")
+  s <- betweenQuotes '\'' <|> betweenQuotes '\"'
   return $ String s
   where
-    quote = char '"'
+    betweenQuotes quoteChar = between (char quoteChar) (char quoteChar) (many $ noneOf (quoteChar : []))
 
 maybeMinusSign :: CharParser st String
 maybeMinusSign = option "" (string "-")
