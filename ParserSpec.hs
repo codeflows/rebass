@@ -1,4 +1,8 @@
--- http://hackage.haskell.org/packages/archive/hspec/0.3.0/doc/html/Test-Hspec.html
+{-
+ - hspec specs for the Reaper project file parser.
+ -
+ - TODO don't repeat the <REAPER_PROJECT parsing in each spec
+ -}
 
 module ParserSpec where
 
@@ -62,6 +66,12 @@ parserSpecs = describe "Reaper project file parser" [
           Container "TRACK" [String "{70223F50-ACF7-7F3A-758F-BD0AD38ACDCD}"]
             [Command "NAME" [String "\"Awesome\" shredding"]]
         ],
+
+    it "parses unquoted GUIDs" $
+      "<REAPER_PROJECT\n<TRACK '{A8C514FE-5292-859C-A662-E4A93B58A873}'\nTRACKID {A8C514FE-5292-859C-A662-E4A93B58A873}\n>\n>"
+        `shouldParseInto`
+          emptyReaperProjectHeader [
+          ],
 
     it "parses negative decimals" $
       "<REAPER_PROJECT -0.1\n>" `shouldParseInto` reaperProjectHeader [Decimal "-0.1"] [],
