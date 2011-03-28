@@ -5,6 +5,7 @@ import System.Directory
 import Compress(compressInto)  
 import ListUtil(replace)
 
+-- TODO luisc and use data structures from ReaperProject.hs
 data Node = Leaf { name :: String, kind :: String }
             | Container { children :: [Node] }
             deriving (Show)
