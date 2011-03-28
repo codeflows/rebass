@@ -2,6 +2,14 @@
  - hspec specs for the Reaper project file parser.
  -
  - TODO don't repeat the <REAPER_PROJECT parsing in each spec
+ - TODO handle data chunks:
+ -    <AU "AUi: My Plugin" "My Plugin" ""
+ -      6QMAAAAAAAAAAAAAEAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA==
+ -      ...
+ - TODO handle MIDI stuff:
+ -      <X 0 0
+ -        /wNFREZfTShfRzBfMTVS
+ -      >
  -}
 
 module ParserSpec where
