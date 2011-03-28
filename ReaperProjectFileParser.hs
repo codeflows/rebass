@@ -13,12 +13,16 @@ withNameAndParameters f np = f (name' np) (parameters' np)
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
+betweenQuotes :: Char -> CharParser st String
+betweenQuotes quoteChar = between quote quote (many notQuote)
+  where
+    quote = char quoteChar
+    notQuote = noneOf $ quoteChar : []
+
 string' :: CharParser st Parameter
 string' = do
   s <- betweenQuotes '\'' <|> betweenQuotes '\"'
   return $ String s
-  where
-    betweenQuotes quoteChar = between (char quoteChar) (char quoteChar) (many $ noneOf (quoteChar : []))
 
 maybeMinusSign :: CharParser st String
 maybeMinusSign = option "" (string "-")
