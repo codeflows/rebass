@@ -50,7 +50,7 @@ parameters = do
       many1 (oneOf "\n\r")
 
 parameter :: CharParser st Parameter
-parameter = decimal <|> integer <|> string' <|> guid
+parameter = decimal <|> integer <|> string' <|> guid <|> identifier
 
 decimal :: CharParser st Parameter
 decimal = try decimal'
@@ -82,6 +82,11 @@ guid :: CharParser st Parameter
 guid = do
   s <- between' '{' '}'
   return $ String ("{" ++ s ++ "}")
+
+identifier :: CharParser st Parameter
+identifier = do
+  id <- name
+  return $ String id
 
 between' :: Char -> Char -> CharParser st String
 between' start end = between (char start) (char end) (many $ notChar end)
