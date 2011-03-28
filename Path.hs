@@ -1,7 +1,7 @@
 module Path where
 
 import Data.List  
-import StringUtil
+import ListUtil
 
 type Path = String   
 
