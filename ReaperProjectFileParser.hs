@@ -2,7 +2,7 @@
 
 module ReaperProjectFileParser (project) where
 
-import ReaperProject(Node(Container, Command), Parameter(..))
+import ReaperProject(Project, Node(Container, Command), Parameter(..))
 import Text.ParserCombinators.Parsec
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
@@ -78,5 +78,5 @@ node = do
   char '>'
   return $ (Container `withNameAndParameters` np) children
 
-project :: CharParser st Node
+project :: CharParser st Project
 project = node
