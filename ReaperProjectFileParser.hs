@@ -13,6 +13,13 @@ withNameAndParameters f np = f (name' np) (parameters' np)
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
 
+guid :: CharParser st Parameter
+guid = do
+  char '{'
+  s <- many (noneOf "}")
+  char '}'
+  return $ String ("{" ++ s ++ "}")
+
 betweenQuotes :: Char -> CharParser st String
 betweenQuotes quoteChar = between quote quote (many notQuote)
   where
@@ -44,7 +51,7 @@ integer = do
   return $ Integer (read (sign ++ i) :: Integer)
 
 parameter :: CharParser st Parameter
-parameter = decimal <|> integer <|> string'
+parameter = decimal <|> integer <|> string' <|> guid
 
 parameters :: CharParser st [Parameter]
 parameters = do
