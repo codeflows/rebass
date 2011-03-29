@@ -73,7 +73,7 @@ maybeMinusSign = option "" (string "-")
 
 string' :: CharParser st Parameter
 string' = do
-  s <- betweenQuotes '\'' <|> betweenQuotes '\"'
+  s <- betweenQuotes '\'' <|> betweenQuotes '\"' <|> betweenQuotes '`'
   return $ String s
   where
     betweenQuotes quoteChar = between' quoteChar quoteChar

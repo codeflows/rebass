@@ -74,7 +74,7 @@ parserSpecs = describe "Reaper project file parser" [
           [Command "NAME" [String "\"Awesome\" shredding"]],
 
     it "parses string literals with back ticks" $
-      "<TRACK\nNAME `\"O\" 'RLY?'`" `shouldParseInto`
+      "<TRACK\nNAME `\"O\" 'RLY?'`\n>" `shouldParseInto`
         Container "TRACK" []
           [Command "NAME" [String "\"O\" 'RLY?'"]],
 
