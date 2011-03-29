@@ -35,7 +35,7 @@ parserSpecs = describe "Reaper project file parser" [
 
     it "parses project definition with one command" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n>" `shouldParseInto`
-        (emptyReaperProjectHeader [Command "SAMPLERATE" [Integer 44100, Integer 0]]),
+        emptyReaperProjectHeader [Command "SAMPLERATE" [Integer 44100, Integer 0]],
 
     it "parses project definition with many commands" $
       "<REAPER_PROJECT\n  SAMPLERATE 44100 0\n  LOCK 1\n>" `shouldParseInto` projectDefinitionWithManyCommands,
@@ -115,13 +115,13 @@ emptyReaperProjectWithVersions = reaperProjectHeader [Decimal "0.1", String "3.7
 emptyReaperProject = emptyReaperProjectHeader []
 
 shouldParseInto :: String -> Node -> HUnit.Assertion
-shouldParseInto input expected = do
+shouldParseInto input expected =
   case parseProject input of
     Left error -> HUnit.assertFailure $ show error
     Right node -> HUnit.assertEqual "parse result" expected node
 
 parseProject :: String -> Either ParseError Node
-parseProject input = parse project "(no source file)" input
+parseProject = parse project "(no source file)"
 
 main :: IO()
 main = hspec parserSpecs
