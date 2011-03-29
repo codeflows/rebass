@@ -25,4 +25,3 @@ Backlog
 - Add makefile and packaging
 - Acceptance tests: parse -> serialize -> compare to original for actual Reaper project files
 - Split stuff under src/ and test/
-- Fix string quoting madness
