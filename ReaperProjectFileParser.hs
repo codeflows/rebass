@@ -26,8 +26,7 @@ nameAndParameters = do
   return $ NameAndParameters n p
 
 children :: CharParser st [Node]
-children = do
-  endBy (node <|> command) spaces
+children = endBy (node <|> command) spaces
 
 command :: CharParser st Node
 command = do
