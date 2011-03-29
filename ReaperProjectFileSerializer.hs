@@ -26,9 +26,15 @@ children i = concat . (map (serialize' i))
 command :: String -> [Parameter] -> String
 command n p = unwords (n:(map parameter p)) ++ "\n"
 
--- TODO handle string quoting
 parameter :: Parameter -> String
-parameter (String s) = "\"" ++ s ++ "\""
+parameter (String s) = quote s
 parameter (Integer i) = show i
 parameter (Decimal d) = d
 
+-- TODO cleanup
+quote :: String -> String
+quote s | elem '\'' s && elem '\"' s = "`" ++ s ++ "`"
+        | elem '\'' s                = "\"" ++ s ++ "\""
+        | elem '"' s                 = "'" ++ s ++ "'"
+        | elem '`' s                 = "\"" ++ s ++ "\""
+        | otherwise                  = "\"" ++ s ++ "\""
