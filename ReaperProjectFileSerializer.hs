@@ -3,7 +3,7 @@ module ReaperProjectFileSerializer (serialize) where
 import ReaperProject
 
 serialize :: Node -> String
-serialize = removeTrailingNewLine . (serialize' 0)
+serialize = removeTrailingNewLine . serialize' 0
   where
     -- TODO is there a builtin function for this?
     removeTrailingNewLine s
@@ -21,10 +21,10 @@ indent :: Int -> String
 indent i = replicate i ' '
 
 children :: Int -> [Node] -> String
-children i = concat . (map (serialize' i))
+children = concatMap . serialize'
 
 command :: String -> [Parameter] -> String
-command n p = unwords (n:(map parameter p)) ++ "\n"
+command n p = unwords (n : map parameter p) ++ "\n"
 
 parameter :: Parameter -> String
 parameter (String s) = quote s
