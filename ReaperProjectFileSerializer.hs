@@ -33,7 +33,7 @@ parameter (Decimal d) = d
 
 -- TODO cleanup
 quote :: String -> String
-quote s | elem '\'' s && elem '\"' s = "`" ++ s ++ "`"
+quote s | elem '\'' s && elem '"' s = "`" ++ s ++ "`"
         | elem '\'' s                = "\"" ++ s ++ "\""
         | elem '"' s                 = "'" ++ s ++ "'"
         | elem '`' s                 = "\"" ++ s ++ "\""
