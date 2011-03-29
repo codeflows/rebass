@@ -75,7 +75,6 @@ parserSpecs = describe "Reaper project file parser" [
             [Command "NAME" [String "\"Awesome\" shredding"]]
         ],
 
-    -- TODO Currently not tracking that the GUID was unquoted originally. Would require a new data ctor...
     it "parses unquoted GUIDs" $
       "<REAPER_PROJECT\n<TRACK '{A8C514FE-5292-859C-A662-E4A93B58A873}'\nTRACKID {A8C514FE-5292-859C-A662-E4A93B58A873}\n>\n>"
         `shouldParseInto`
@@ -84,7 +83,6 @@ parserSpecs = describe "Reaper project file parser" [
               [Command "TRACKID" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]]
           ],
 
-    -- TODO Another data type?
     it "parses string identifier parameters" $
       "<SOURCE WAVE\nFILE \"02-110328_2314.wav\"\n>" `shouldParseInto`
         Container "SOURCE" [String "WAVE"]
