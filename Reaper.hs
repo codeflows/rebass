@@ -4,33 +4,32 @@ import Path
 import System.Directory   
 import Compress(compressInto)  
 import ListUtil(replace)
+import ReaperProject
+import System.Environment(getArgs)
 
--- TODO luisc and use data structures from ReaperProject.hs
-data Node = Leaf { name :: String, kind :: String }
-            | Container { children :: [Node] }
-            deriving (Show)
+data Sample = Sample { fileName :: String }
             
-type Project = Node            
-            
-samples :: Project -> [Node]
-samples s@(Leaf name "sample") = [s]
-samples (Container children) = concat $ map samples children
+samples :: Project -> [Sample]
+samples (Command "FILE" [String fileName]) = [Sample fileName]
+samples (Container name parameters children) = concat $ map samples children
 samples _ = []
 
 flatten :: Project -> Project
-flatten (Leaf name "sample") = Leaf (lastPathElement name) "sample"
-flatten l@(Leaf _ _) = l
-flatten (Container children) = Container (map flatten children)
+flatten (Command "FILE" [String fileName]) = Command "FILE" [String (lastPathElement fileName)]
+flatten l@(Command _ _) = l
+flatten (Container name parameters children) = Container name parameters (map flatten children)
 
-main = do 
+main = getArgs >>= dumpProject
+        
+dumpProject [dest] = do 
+    createDirectoryIfMissing True dest
     flattenSamples project dest
     -- TODO: flatten project too
-  where project = Container [Leaf "examples/patrolcar.wav" "sample"]
-        sampleList = samples project
-        dest = "/Users/juha/Dropbox/rebass/trololo"
+  where project = Container "project" [] [Command "FILE" [String "examples/patrolcar.wav"]]
+        sampleList = samples project  
+dumpProject _ = putStrLn "Plz provide dest dir"            
           
 flattenSamples :: Project -> Path -> IO ()
 flattenSamples project dest = do
-        mapM_ copySample (samples project)
-        
-    where copySample sample = compressInto (name sample) $ replace ".wav" ".mp3" (dest `subPath` (lastPathElement $ name sample))
+        mapM_ copySample (samples project)        
+    where copySample sample = compressInto (fileName sample) $ replace ".wav" ".mp3" (dest `subPath` (lastPathElement $ fileName sample))
