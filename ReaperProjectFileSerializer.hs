@@ -31,10 +31,14 @@ parameter (String s) = quote s
 parameter (Integer i) = show i
 parameter (Decimal d) = d
 
--- TODO cleanup
 quote :: String -> String
-quote s | elem '\'' s && elem '"' s = "`" ++ s ++ "`"
-        | elem '\'' s                = "\"" ++ s ++ "\""
-        | elem '"' s                 = "'" ++ s ++ "'"
-        | elem '`' s                 = "\"" ++ s ++ "\""
-        | otherwise                  = "\"" ++ s ++ "\""
+quote s | contains singleQuote && contains doubleQuote = surround backTick
+        | contains singleQuote                         = surround doubleQuote
+        | contains doubleQuote                         = surround singleQuote
+        | otherwise                                    = surround doubleQuote
+  where
+    singleQuote = '\''
+    doubleQuote = '"'
+    backTick = '`'
+    contains char = elem char s
+    surround char = [char] ++ s ++ [char]
