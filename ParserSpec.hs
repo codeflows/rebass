@@ -63,25 +63,26 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT\nRENDER_1X 0\n>" `shouldParseInto` emptyReaperProjectHeader [Command "RENDER_1X" [Integer 0]],
 
     it "parses string literals" $
-      "<REAPER_PROJECT\n  MARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
+      "<REAPER_PROJECT\nMARKER 2 31.30434782608696 \"Verse 1\" 0\n>" `shouldParseInto`
         emptyReaperProjectHeader [
           Command "MARKER" [Integer 2, Decimal "31.30434782608696", String "Verse 1", Integer 0]
         ],
 
     it "parses string literals with single quotes" $
-      "<REAPER_PROJECT\n<TRACK '{70223F50-ACF7-7F3A-758F-BD0AD38ACDCD}'\nNAME '\"Awesome\" shredding'\n>\n>" `shouldParseInto`
-        emptyReaperProjectHeader [
-          Container "TRACK" [String "{70223F50-ACF7-7F3A-758F-BD0AD38ACDCD}"]
-            [Command "NAME" [String "\"Awesome\" shredding"]]
-        ],
+      "<TRACK '{70223F50-ACF7-7F3A-758F-BD0AD38ACDCD}'\nNAME '\"Awesome\" shredding'\n>" `shouldParseInto`
+        Container "TRACK" [String "{70223F50-ACF7-7F3A-758F-BD0AD38ACDCD}"]
+          [Command "NAME" [String "\"Awesome\" shredding"]],
+
+    it "parses string literals with back ticks" $
+      "<TRACK\nNAME `\"O\" 'RLY?'`" `shouldParseInto`
+        Container "TRACK" []
+          [Command "NAME" [String "\"O\" 'RLY?'"]],
 
     it "parses unquoted GUIDs" $
-      "<REAPER_PROJECT\n<TRACK '{A8C514FE-5292-859C-A662-E4A93B58A873}'\nTRACKID {A8C514FE-5292-859C-A662-E4A93B58A873}\n>\n>"
+      "<TRACK '{A8C514FE-5292-859C-A662-E4A93B58A873}'\nTRACKID {A8C514FE-5292-859C-A662-E4A93B58A873}\n>"
         `shouldParseInto`
-          emptyReaperProjectHeader [
-            Container "TRACK" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]
-              [Command "TRACKID" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]]
-          ],
+          Container "TRACK" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]
+            [Command "TRACKID" [String "{A8C514FE-5292-859C-A662-E4A93B58A873}"]],
 
     it "parses string identifier parameters" $
       "<SOURCE WAVE\nFILE \"02-110328_2314.wav\"\n>" `shouldParseInto`
