@@ -1,5 +1,3 @@
--- Attempt at parsing Reaper project files with Parsec
-
 module ReaperProjectFileParser (project) where
 
 import ReaperProject(Project, Node(Container, Command), Parameter(..))
