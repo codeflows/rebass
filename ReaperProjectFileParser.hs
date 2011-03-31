@@ -29,9 +29,7 @@ children :: CharParser st [Node]
 children = endBy (node <|> command) spaces
 
 command :: CharParser st Node
-command = do
-  np <- nameAndParameters
-  return $ Command `withNameAndParameters` np
+command = fmap (Command `withNameAndParameters`) nameAndParameters
 
 name :: CharParser st String
 name = many1 (letter <|> digit <|> char '_')
@@ -71,10 +69,9 @@ maybeMinusSign :: CharParser st String
 maybeMinusSign = option "" (string "-")
 
 string' :: CharParser st Parameter
-string' = do
-  s <- betweenQuotes '\'' <|> betweenQuotes '\"' <|> betweenQuotes '`'
-  return $ String s
+string' = fmap String betweenAnyQuotes
   where
+    betweenAnyQuotes = betweenQuotes '\'' <|> betweenQuotes '\"' <|> betweenQuotes '`'
     betweenQuotes quoteChar = between' quoteChar quoteChar
 
 guid :: CharParser st Parameter
@@ -83,9 +80,7 @@ guid = do
   return $ String ("{" ++ s ++ "}")
 
 identifier :: CharParser st Parameter
-identifier = do
-  id <- name
-  return $ String id
+identifier = fmap String name
 
 between' :: Char -> Char -> CharParser st String
 between' start end = between (char start) (char end) (many $ notChar end)
