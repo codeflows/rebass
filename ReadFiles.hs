@@ -1,4 +1,4 @@
-module ReadFiles (readFiles, handleFileOrDirectory) where
+module ReadFiles (readFiles, readFileStatus, handleFileOrDirectory) where
                              
 import Status
 import Path
@@ -6,15 +6,15 @@ import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)                                                              
 import Data.List(sort)
-import Control.Monad
+import Control.Monad(liftM2)
                 
 ignored = [".", "..", ".git", ".gitignore", ".rebass"]
 
 readFiles :: Path -> Path -> IO Status
-readFiles local remote = liftM2 Status (readRoot local) (readRoot remote)
+readFiles local remote = liftM2 Status (readFileStatus local) (readFileStatus remote)
 
-readRoot :: Path -> IO File
-readRoot root = read root
+readFileStatus :: Path -> IO File
+readFileStatus root = read root
     where
         read path = handleFileOrDirectory path readFile readDirectory
 

@@ -1,7 +1,14 @@
-module ReaperProjectFileParser (project) where
+module ReaperProjectFileParser (project, parseProjectFile) where
 
 import ReaperProject(Project, Node(Container, Command), Parameter(..))
 import Text.ParserCombinators.Parsec
+
+parseProjectFile :: String -> IO Project
+parseProjectFile file = do
+  result <- parseFromFile project file
+  case result of
+    Right project  -> return project
+    -- TODO: how to handle the Left case?
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
