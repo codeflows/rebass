@@ -1,4 +1,4 @@
-module Reaper where
+module ReaperStuff where
 
 import Path
 import System.Directory   
@@ -35,11 +35,6 @@ flatten (Command "FILE" [String fileName]) = Command "FILE" [String (lastPathEle
 flatten l@(Command _ _) = l
 flatten (Container name parameters children) = Container name parameters (map flatten children)
 
-main = do
-    status <- projectStatus "examples/PatrolCar.RPP"
-    putStrLn $ show status
---main = getArgs >>= dumpProject
-        
 dumpProject [dest] = do 
     createDirectoryIfMissing True dest
     flattenSamples project dest

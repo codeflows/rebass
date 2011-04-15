@@ -1,4 +1,4 @@
-module Cache(saveStatus, loadStatus, saveRemote, getRemote) where
+module Cache(saveStatus, loadStatus, saveRemote, getRemote, remoteLocationFor) where
 
 import Status
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
