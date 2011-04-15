@@ -13,6 +13,7 @@ rebass :: [String] -> IO ()
 
 rebass ["init", projectFile, remoteAlias] = do
 	remoteLocation <- remoteLocationFor remoteAlias
+	status <- projectStatus projectFile
 	putStrLn $ "Rebass initialized. Using remote repository " ++ remoteLocation
     	
 rebass _ = do
