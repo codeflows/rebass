@@ -26,6 +26,5 @@ rebass ["init", projectFile, remoteAlias] = do
 
 rebass _ = do
 	putStrLn "USAGE:"
-	putStrLn "rebass init <projectfile> <remotelocation>"
-	putStrLn "rebass update"
-	putStrLn "rebass status"
+	putStrLn "rebass init <projectfile> <remotealias>"
+	putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
