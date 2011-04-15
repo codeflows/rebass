@@ -21,9 +21,7 @@ data ProjectStatus = ProjectStatus { projectFile :: File, projectSamples :: [Fil
 projectStatus :: Path -> IO ProjectStatus
 projectStatus projectPath = liftM2 ProjectStatus (readFileStatus projectPath) readProjectSampleStatus
     where readProjectSampleStatus = parseProjectFile projectPath >>= projectSampleStatus
-          projectSampleStatus = mapM (readFileStatus . sampleFilePath) . samples
-          sampleFilePath sample | isAbsolutePath sample = fileName sample
-                                | otherwise             = (parent projectPath) `subPath` sample
+          projectSampleStatus = mapM (readFileStatus . (sampleFilePath projectPath)) . samples
             
 samples :: Project -> [Sample]
 samples (Command "FILE" [String fileName]) = [Sample fileName]
@@ -34,16 +32,13 @@ flatten :: Project -> Project
 flatten (Command "FILE" [String fileName]) = Command "FILE" [String (lastPathElement fileName)]
 flatten l@(Command _ _) = l
 flatten (Container name parameters children) = Container name parameters (map flatten children)
-
-dumpProject [dest] = do 
-    createDirectoryIfMissing True dest
-    flattenSamples project dest
-    -- TODO: flatten project too
-  where project = Container "project" [] [Command "FILE" [String "examples/patrolcar.wav"]]
-        sampleList = samples project  
-dumpProject _ = putStrLn "Plz provide dest dir"            
           
-flattenSamples :: Project -> Path -> IO ()
-flattenSamples project dest = do
-        mapM_ copySample (samples project)        
-    where copySample sample = compressInto (fileName sample) $ replace ".wav" ".mp3" (dest `subPath` (lastPathElement $ fileName sample))
+flattenSamples :: Path -> Path -> IO ()
+flattenSamples projectPath dest = do
+    project <- parseProjectFile projectPath
+    mapM_ copySample (samples project)
+        where copySample sample = compressInto (sampleFilePath projectPath sample) $ replace ".wav" ".mp3" (dest `subPath` (lastPathElement $ fileName sample))
+    
+sampleFilePath projectPath sample | isAbsolutePath sample = fileName sample
+                                  | otherwise             = (parent projectPath) `subPath` sample
+    
