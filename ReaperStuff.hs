@@ -37,8 +37,13 @@ flattenSamples :: Path -> Path -> IO ()
 flattenSamples projectPath dest = do
     project <- parseProjectFile projectPath
     mapM_ copySample (samples project)
-        where copySample sample = compressInto (sampleFilePath projectPath sample) $ destFile sample
+        where copySample sample = ifNotExists (destFile sample) $ compressInto (sampleFilePath projectPath sample) $ destFile sample
               destFile sample = replace ".wav" ".mp3" (dest `subPath` ( lastPathElement $ fileName sample))
+              
+ifNotExists :: Path -> IO () -> IO ()
+ifNotExists file action = do
+    exists <- doesFileExist file
+    if not exists then action else return ()
     
 sampleFilePath projectPath sample | isAbsolutePath sample = fileName sample
                                   | otherwise             = (parent projectPath) `subPath` sample
