@@ -9,6 +9,7 @@ import List
 import UpdateFile 
 import ListUtil (endsWith, replace)
 
+compressInto :: Path -> Path -> IO ()
 compressInto src dest = do
     putStrLn $ "Compressing " ++ src ++ " -> " ++ dest
     result <- readProcessWithExitCode "lame" [src, dest] []
