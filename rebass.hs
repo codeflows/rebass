@@ -18,9 +18,10 @@ rebass :: [String] -> IO ()
 rebass ["init", projectFile, remoteAlias] = do
     remoteLocation <- remoteLocationFor remoteAlias
     status <- projectStatus projectFile
+    let projectName = lastPathElement projectFile
     createDirectoryIfMissing True remoteLocation
     flattenSamples projectFile remoteLocation	
-    let remoteProjectFile = remoteLocation `subPath` (lastPathElement projectFile)
+    let remoteProjectFile = remoteLocation `subPath` projectName
     parseProjectFile projectFile >>= (writeFile remoteProjectFile) . serialize . flatten
     putStrLn $ "Rebass initialized. Using remote repository " ++ remoteLocation
 
