@@ -1,7 +1,8 @@
-module Cache(saveStatus, loadStatus, saveRemote, getRemote, remoteLocationFor) where
+module Cache where
 
 import Status
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
+import Path
 
 saveStatus :: Status -> IO ()
 saveStatus status = do 
@@ -26,6 +27,8 @@ saveRemote name = do
 remoteLocationFor name = do
     home <- getHomeDirectory	
     return $ home ++ "/Dropbox/Rebass/" ++ name
+    
+statusFileFor name = rebassDir `subPath` name    
 	
 getRemote = readFile remoteConfigFile	
 
