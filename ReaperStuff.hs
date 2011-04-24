@@ -41,9 +41,11 @@ flattenSamples projectPath dest = do
               destFile sample = replace ".wav" ".mp3" (dest `subPath` ( lastPathElement $ fileName sample))
               
 ifNotExists :: Path -> IO () -> IO ()
-ifNotExists file action = do
-    exists <- doesFileExist file
-    if not exists then action else return ()
+ifNotExists file action = doesFileExist file >>= ifElse action (return ())
+    
+ifElse :: a -> a -> Bool -> a
+ifElse a b True = a
+ifElse a b False = b        
     
 sampleFilePath projectPath sample | isAbsolutePath sample = fileName sample
                                   | otherwise             = (parent projectPath) `subPath` sample
