@@ -29,7 +29,7 @@ samples (Container name parameters children) = concat $ map samples children
 samples _ = []
 
 flatten :: Project -> Project
-flatten (Command "FILE" [String fileName]) = Command "FILE" [String (lastPathElement fileName)]
+flatten (Command "FILE" [String fileName]) = Command "FILE" [String (replace ".wav" ".mp3" $ lastPathElement fileName)]
 flatten l@(Command _ _) = l
 flatten (Container name parameters children) = Container name parameters (map flatten children)
           
