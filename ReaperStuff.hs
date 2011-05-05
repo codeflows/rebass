@@ -1,5 +1,6 @@
 module ReaperStuff where
 
+import Diff(Diff, diff)
 import Path
 import System.Directory   
 import Compress(compressInto)  
@@ -23,6 +24,12 @@ projectStatus projectPath = liftM2 ProjectStatus (readFileStatus projectPath) re
     where readProjectSampleStatus = parseProjectFile projectPath >>= projectSampleStatus
           projectSampleStatus = mapM (readFileStatus . (sampleFilePath projectPath)) . samples
             
+projectDiff :: ProjectStatus -> IO [Diff]
+projectDiff (ProjectStatus cachedProject cachedSamples) = do
+    newStatus <- projectStatus $ pathOf cachedProject 
+    return $ diff (cachedProject : cachedSamples) (projectFile newStatus : projectSamples newStatus) 
+
+
 samples :: Project -> [Sample]
 samples (Command "FILE" [String fileName]) = [Sample fileName]
 samples (Container name parameters children) = concat $ map samples children

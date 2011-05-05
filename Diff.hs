@@ -1,4 +1,4 @@
-module Diff (Diff (Add, MkDir, Rm, Update), compareStatus, getConflicts) where
+module Diff (Diff (Add, MkDir, Rm, Update), diff, compareStatus, getConflicts) where
 
 import Status
 import Path
