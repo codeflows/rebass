@@ -18,7 +18,7 @@ rebass :: [String] -> IO ()
 rebass ["init", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
     dumpProject project
-    status <- readStatus project
+    status <- readCurrentStatus project
     writeStatus project status 
     putStrLn $ "Rebass initialized." 
 
@@ -43,7 +43,7 @@ defineProject projectFile remoteAlias = do
     let remoteProjectFile = remoteLocation `subPath` projectName
     return $ Project projectName projectFile remoteAlias remoteLocation remoteProjectFile
 
-readStatus project = do
+readCurrentStatus project = do
     localStatus <- projectStatus $ localProjectFile project
     remoteStatus <- projectStatus $ remoteProjectFile project
     return (localStatus, remoteStatus)
