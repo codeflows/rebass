@@ -17,7 +17,7 @@ rebass :: [String] -> IO ()
 
 rebass ["init", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
-    dumpProject project
+    copyToRemote project
     status <- readCurrentStatus project
     writeStatus project status 
     putStrLn $ "Rebass initialized." 
@@ -55,7 +55,7 @@ writeStatus project (localStatus, remoteStatus) = do
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show (localStatus, remoteStatus)
 
-dumpProject project = do
+copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project
     flattenSamples (localProjectFile project) $ remoteLocation	project
     parseProjectFile (localProjectFile project) >>= (writeFile $ remoteProjectFile project) . serialize . flatten
