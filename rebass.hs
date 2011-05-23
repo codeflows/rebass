@@ -16,8 +16,9 @@ main = getArgs >>= rebass
 rebass :: [String] -> IO ()	
 
 rebass ["init", projectFile, remoteAlias] = do
+    project <- defineProject projectFile remoteAlias
     dumpProject projectFile remoteAlias
-    status <- readStatus projectFile remoteAlias
+    status <- readStatus project
     writeStatus projectFile remoteAlias status 
     putStrLn $ "Rebass initialized." 
 
@@ -29,12 +30,18 @@ rebass _ = do
 	putStrLn "rebass init <projectfile> <remotealias>"
 	putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
 
-readStatus projectFile remoteAlias = do
-    remoteLocation <- remoteLocationFor remoteAlias
+data Project = Project { projectName :: String, localProjectFile :: String, remoteProjectFile :: String} 
+
+defineProject :: String -> String -> IO Project
+defineProject projectFile remoteAlias = do
     let projectName = lastPathElement projectFile
+    remoteLocation <- remoteLocationFor remoteAlias
     let remoteProjectFile = remoteLocation `subPath` projectName
-    localStatus <- projectStatus projectFile
-    remoteStatus <- projectStatus remoteProjectFile
+    return $ Project projectName projectFile remoteProjectFile
+
+readStatus project = do
+    localStatus <- projectStatus $ localProjectFile project
+    remoteStatus <- projectStatus $ remoteProjectFile project
     return (localStatus, remoteStatus)
 
 writeStatus projectFile remoteAlias (localStatus, remoteStatus) = do
