@@ -17,7 +17,7 @@ instance Pathy Sample where
     pathOf sample = fileName sample
 
 data ProjectStatus = ProjectStatus { projectFile :: File, projectSamples :: [File] }
-    deriving (Show, Read)
+    deriving (Show, Read, Eq)
 
 projectStatus :: Path -> IO ProjectStatus
 projectStatus projectPath = liftM2 ProjectStatus (readFileStatus projectPath) readProjectSampleStatus

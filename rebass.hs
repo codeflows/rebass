@@ -25,7 +25,18 @@ rebass ["init", projectFile, remoteAlias] = do
 rebass ["update", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
     cachedStatus <- readCachedStatus project
-    putStrLn $ "Not implemented. However, I just read the cached status" 
+    currentStatus <- readCurrentStatus project
+    let remoteChanged = (snd cachedStatus /= snd currentStatus)
+    let localChanged = (fst cachedStatus /= fst currentStatus)
+    if remoteChanged
+        then putStrLn $ "Remote project changed. Update not implemented yet."
+        else if localChanged
+            then do 
+              putStrLn $ "Local changes detected. Updating."
+              copyToRemote project
+              writeStatus project currentStatus
+              putStrLn $ "Up to date."
+            else putStrLn $ "Already up to date."    
 
 rebass _ = do
 	putStrLn "USAGE:"
@@ -69,4 +80,5 @@ copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project
     flattenSamples (localProjectFile project) $ remoteLocation	project
     parseProjectFile (localProjectFile project) >>= (writeFile $ remoteProjectFile project) . serialize . flatten
+    putStrLn $ "Wrote project to " ++ (remoteLocation project)
 

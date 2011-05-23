@@ -9,7 +9,7 @@ data Status = Status { localStatus :: File, remoteStatus :: File }
 
 data File = RegularFile { path :: Path, status :: FileStatus } 
             | Directory { path :: Path, contents :: [File]}
-            deriving (Show, Read)
+            deriving (Show, Read, Eq)
             
 data FileStatus = FileStatus { timeStamp :: CalendarTime, size :: Integer }                
             deriving (Show, Read, Eq)
