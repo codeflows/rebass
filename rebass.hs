@@ -39,9 +39,10 @@ rebass ["update", projectFile, remoteAlias] = do
             else putStrLn $ "Already up to date."    
 
 rebass _ = do
-	putStrLn "USAGE:"
-	putStrLn "rebass init <projectfile> <remotealias>"
-	putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
+  putStrLn "USAGE:"
+  putStrLn "rebass init <projectfile> <remotealias>"
+  putStrLn "rebass update <projectfile> <remotealias>"
+  putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
 
 data Project = Project { projectName :: String, 
                          localProjectFile :: String,
