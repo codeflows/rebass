@@ -19,7 +19,7 @@ rebass ["init", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
     dumpProject project
     status <- readStatus project
-    writeStatus projectFile remoteAlias status 
+    writeStatus project status 
     putStrLn $ "Rebass initialized." 
 
 rebass ["update", remoteAlias] = do
@@ -31,7 +31,8 @@ rebass _ = do
 	putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
 
 data Project = Project { projectName :: String, 
-                         localProjectFile :: String, 
+                         localProjectFile :: String,
+                         remoteAlias :: String, 
                          remoteLocation :: String, 
                          remoteProjectFile :: String} 
 
@@ -40,16 +41,15 @@ defineProject projectFile remoteAlias = do
     let projectName = lastPathElement projectFile
     remoteLocation <- remoteLocationFor remoteAlias
     let remoteProjectFile = remoteLocation `subPath` projectName
-    return $ Project projectName projectFile remoteLocation remoteProjectFile
+    return $ Project projectName projectFile remoteAlias remoteLocation remoteProjectFile
 
 readStatus project = do
     localStatus <- projectStatus $ localProjectFile project
     remoteStatus <- projectStatus $ remoteProjectFile project
     return (localStatus, remoteStatus)
 
-writeStatus projectFile remoteAlias (localStatus, remoteStatus) = do
-    let projectName = lastPathElement projectFile
-    statusFile <- statusFileFor $ remoteAlias ++ "." ++ projectName ++ ".status"
+writeStatus project (localStatus, remoteStatus) = do
+    statusFile <- statusFileFor $ (remoteAlias project) ++ "." ++ (projectName project) ++ ".status"
     createRebassDir
     writeFile statusFile $ show (localStatus, remoteStatus)
     putStrLn $ "Using status file " ++ statusFile
