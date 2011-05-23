@@ -57,6 +57,6 @@ writeStatus projectFile remoteAlias (localStatus, remoteStatus) = do
 
 dumpProject project = do
     createDirectoryIfMissing True $ remoteLocation project
-    flattenSamples projectFile $ remoteLocation	project
+    flattenSamples (localProjectFile project) $ remoteLocation	project
     parseProjectFile (localProjectFile project) >>= (writeFile $ remoteProjectFile project) . serialize . flatten
 
