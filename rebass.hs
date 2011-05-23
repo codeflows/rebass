@@ -17,7 +17,7 @@ rebass :: [String] -> IO ()
 
 rebass ["init", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
-    dumpProject projectFile remoteAlias
+    dumpProject project
     status <- readStatus project
     writeStatus projectFile remoteAlias status 
     putStrLn $ "Rebass initialized." 
@@ -30,14 +30,17 @@ rebass _ = do
 	putStrLn "rebass init <projectfile> <remotealias>"
 	putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
 
-data Project = Project { projectName :: String, localProjectFile :: String, remoteProjectFile :: String} 
+data Project = Project { projectName :: String, 
+                         localProjectFile :: String, 
+                         remoteLocation :: String, 
+                         remoteProjectFile :: String} 
 
 defineProject :: String -> String -> IO Project
 defineProject projectFile remoteAlias = do
     let projectName = lastPathElement projectFile
     remoteLocation <- remoteLocationFor remoteAlias
     let remoteProjectFile = remoteLocation `subPath` projectName
-    return $ Project projectName projectFile remoteProjectFile
+    return $ Project projectName projectFile remoteLocation remoteProjectFile
 
 readStatus project = do
     localStatus <- projectStatus $ localProjectFile project
@@ -52,11 +55,8 @@ writeStatus projectFile remoteAlias (localStatus, remoteStatus) = do
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show (localStatus, remoteStatus)
 
-dumpProject projectFile remoteAlias = do
-    remoteLocation <- remoteLocationFor remoteAlias
-    let projectName = lastPathElement projectFile
-    createDirectoryIfMissing True remoteLocation
-    flattenSamples projectFile remoteLocation	
-    let remoteProjectFile = remoteLocation `subPath` projectName
-    parseProjectFile projectFile >>= (writeFile remoteProjectFile) . serialize . flatten
+dumpProject project = do
+    createDirectoryIfMissing True $ remoteLocation project
+    flattenSamples projectFile $ remoteLocation	project
+    parseProjectFile (localProjectFile project) >>= (writeFile $ remoteProjectFile project) . serialize . flatten
 
