@@ -24,9 +24,10 @@ rebass ["init", projectFile, remoteAlias] = do
     parseProjectFile projectFile >>= (writeFile remoteProjectFile) . serialize . flatten
     localStatus <- projectStatus projectFile
     remoteStatus <- projectStatus remoteProjectFile
-    let statusFile = statusFileFor $ remoteAlias ++ "." ++ projectName ++ ".status"
+    statusFile <- statusFileFor $ remoteAlias ++ "." ++ projectName ++ ".status"
     createRebassDir
     writeFile statusFile $ show (localStatus, remoteStatus)
+    putStrLn $ "Using status file " ++ statusFile
     putStrLn $ "Rebass initialized. Using remote repository " ++ remoteLocation    
 
 rebass _ = do
