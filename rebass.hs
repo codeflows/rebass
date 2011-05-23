@@ -22,8 +22,10 @@ rebass ["init", projectFile, remoteAlias] = do
     writeStatus project status 
     putStrLn $ "Rebass initialized." 
 
-rebass ["update", remoteAlias] = do
-    putStrLn $ "Update not yet implemented!"
+rebass ["update", projectFile, remoteAlias] = do
+    project <- defineProject projectFile remoteAlias
+    cachedStatus <- readCachedStatus project
+    putStrLn $ "Not implemented. However, I just read the cached status" 
 
 rebass _ = do
 	putStrLn "USAGE:"
@@ -48,12 +50,20 @@ readCurrentStatus project = do
     remoteStatus <- projectStatus $ remoteProjectFile project
     return (localStatus, remoteStatus)
 
+readCachedStatus :: Project -> IO (ProjectStatus, ProjectStatus)
+readCachedStatus project = do
+    statusFile <- projectStatusFile project 
+    readFile statusFile >>= (return . read)
+
+writeStatus :: Project -> (ProjectStatus, ProjectStatus) -> IO ()
 writeStatus project (localStatus, remoteStatus) = do
-    statusFile <- statusFileFor $ (remoteAlias project) ++ "." ++ (projectName project) ++ ".status"
+    statusFile <- projectStatusFile project 
     createRebassDir
     writeFile statusFile $ show (localStatus, remoteStatus)
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show (localStatus, remoteStatus)
+
+projectStatusFile project = statusFileFor $ (remoteAlias project) ++ "." ++ (projectName project) ++ ".status"
 
 copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project
