@@ -22,9 +22,9 @@ rebass ["init", projectFile, remoteAlias] = do
     writeStatus project status 
     putStrLn $ "Rebass initialized." 
 
-rebass ["update", projectFile, remoteAlias] = do
-    project <- defineProject projectFile remoteAlias
-    cachedStatus <- readCachedStatus project
+rebass ["update", projectFile] = do
+    cachedStatus <- readCachedStatus $ projectNameFromFileName projectFile
+    project <- defineProject projectFile $ alias cachedStatus
     currentStatus <- readCurrentStatus project
     let remoteChanged = (remoteStatus cachedStatus /= remoteStatus currentStatus)
     let localChanged = (localStatus cachedStatus /= localStatus currentStatus)
@@ -41,7 +41,7 @@ rebass ["update", projectFile, remoteAlias] = do
 rebass _ = do
   putStrLn "USAGE:"
   putStrLn "rebass init <projectfile> <remotealias>"
-  putStrLn "rebass update <projectfile> <remotealias>"
+  putStrLn "rebass update <projectfile>" 
   putStrLn "Example: rebass init examples/PatrolCar.RPP lollable"
 
 data RebassProject = RebassProject { projectName :: String, 
@@ -55,9 +55,11 @@ data RebassProjectStatus = RebassProjectStatus { localStatus :: ReaperProjectSta
 		         remoteStatus :: ReaperProjectStatus }
 		       deriving(Read, Show, Eq)
 
+projectNameFromFileName projectFile = lastPathElement projectFile
+
 defineProject :: String -> String -> IO RebassProject
 defineProject projectFile remoteAlias = do
-    let projectName = lastPathElement projectFile
+    let projectName = projectNameFromFileName projectFile
     remoteLocation <- remoteLocationFor remoteAlias
     let remoteProjectFile = remoteLocation `subPath` projectName
     return $ RebassProject projectName projectFile remoteAlias remoteLocation remoteProjectFile
@@ -67,19 +69,19 @@ readCurrentStatus project = do
     remoteStatus <- projectStatus $ remoteProjectFile project
     return $ RebassProjectStatus localStatus (remoteAlias project) remoteStatus
 
-readCachedStatus :: RebassProject -> IO RebassProjectStatus
-readCachedStatus project = do
-    statusFile <- projectStatusFile project 
+readCachedStatus :: String -> IO RebassProjectStatus
+readCachedStatus projectName = do
+    statusFile <- projectStatusFile projectName
     readFile statusFile >>= (return . read)
 
 writeStatus :: RebassProject -> RebassProjectStatus -> IO ()
 writeStatus project status = do
-    statusFile <- projectStatusFile project 
+    statusFile <- projectStatusFile $ projectName project 
     createRebassDir
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show status 
 
-projectStatusFile project = statusFileFor $ (projectName project) ++ ".status"
+projectStatusFile projectName = statusFileFor $ projectName ++ ".status"
 
 copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project
