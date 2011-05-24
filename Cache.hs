@@ -5,18 +5,6 @@ import System.Directory(createDirectoryIfMissing, getHomeDirectory)
 import Path
 import Control.Monad(liftM)
 
-saveStatus :: Status -> IO ()
-saveStatus status = do
-   createRebassDir
-   sft <- statusFile
-   writeFile sft $ show status
-
-loadStatus :: IO Status
-loadStatus = do
-     contents <- statusFile >>= readFile 
-     let status = read contents :: Status
-     return status
-
 saveRemote :: String -> IO String
 saveRemote name = do
     remote <- remoteLocationFor name

@@ -1,4 +1,4 @@
-module ReadFiles (readFiles, readFileStatus, handleFileOrDirectory) where
+module ReadFiles (readFileStatus, handleFileOrDirectory) where
                              
 import Status
 import Path
@@ -9,9 +9,6 @@ import Data.List(sort)
 import Control.Monad(liftM2)
                 
 ignored = [".", "..", ".git", ".gitignore", ".rebass"]
-
-readFiles :: Path -> Path -> IO Status
-readFiles local remote = liftM2 Status (readFileStatus local) (readFileStatus remote)
 
 readFileStatus :: Path -> IO File
 readFileStatus root = read root

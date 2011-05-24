@@ -26,8 +26,8 @@ rebass ["update", projectFile, remoteAlias] = do
     project <- defineProject projectFile remoteAlias
     cachedStatus <- readCachedStatus project
     currentStatus <- readCurrentStatus project
-    let remoteChanged = (snd cachedStatus /= snd currentStatus)
-    let localChanged = (fst cachedStatus /= fst currentStatus)
+    let remoteChanged = (remoteStatus cachedStatus /= remoteStatus currentStatus)
+    let localChanged = (localStatus cachedStatus /= localStatus currentStatus)
     if remoteChanged
         then putStrLn $ "Remote project changed. Update not implemented yet."
         else if localChanged
@@ -50,6 +50,11 @@ data RebassProject = RebassProject { projectName :: String,
 	                 remoteLocation :: String, 
 	                 remoteProjectFile :: String} 
 
+data RebassProjectStatus = RebassProjectStatus { localStatus :: ReaperProjectStatus,
+		         alias :: String,
+		         remoteStatus :: ReaperProjectStatus }
+		       deriving(Read, Show, Eq)
+
 defineProject :: String -> String -> IO RebassProject
 defineProject projectFile remoteAlias = do
     let projectName = lastPathElement projectFile
@@ -60,20 +65,19 @@ defineProject projectFile remoteAlias = do
 readCurrentStatus project = do
     localStatus <- projectStatus $ localProjectFile project
     remoteStatus <- projectStatus $ remoteProjectFile project
-    return (localStatus, remoteStatus)
+    return $ RebassProjectStatus localStatus (remoteAlias project) remoteStatus
 
-readCachedStatus :: RebassProject -> IO (ReaperProjectStatus, ReaperProjectStatus)
+readCachedStatus :: RebassProject -> IO RebassProjectStatus
 readCachedStatus project = do
     statusFile <- projectStatusFile project 
     readFile statusFile >>= (return . read)
 
-writeStatus :: RebassProject -> (ReaperProjectStatus, ReaperProjectStatus) -> IO ()
-writeStatus project (localStatus, remoteStatus) = do
+writeStatus :: RebassProject -> RebassProjectStatus -> IO ()
+writeStatus project status = do
     statusFile <- projectStatusFile project 
     createRebassDir
-    writeFile statusFile $ show (localStatus, remoteStatus)
     putStrLn $ "Using status file " ++ statusFile
-    writeFile statusFile $ show (localStatus, remoteStatus)
+    writeFile statusFile $ show status 
 
 projectStatusFile project = statusFileFor $ (projectName project) ++ ".status"
 
