@@ -7,7 +7,7 @@ data Diff = Add { path :: Path } | MkDir { path :: Path } | Rm { path :: Path } 
     deriving (Show, Read)
     
 instance Pathy Diff where
-    pathOf diff = Diff.path diff
+    pathOf = Diff.path
 
 diff :: [File] -> [File] -> [Diff]       
 diff [] [] = []
@@ -22,7 +22,7 @@ diff (old:olds) (new:news)
 
 findAdded :: File -> [Diff]
 findAdded (RegularFile path _) = [Add path]
-findAdded (Directory path contents) = MkDir path : (concat $ map findAdded contents)
+findAdded (Directory path contents) = MkDir path : (concatMap findAdded contents)
 
 compareFile :: File -> File -> [Diff]
 compareFile (RegularFile path _) new@(Directory _ _) = [Rm path] ++ findAdded new

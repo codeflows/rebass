@@ -27,7 +27,7 @@ subPath :: Pathy a => Pathy b => a -> b -> Path
 subPath root sub = (pathOf root) ++ "/" ++ (pathOf sub)
 
 lastPathElement :: Pathy a => a -> Path
-lastPathElement path = head $ reverse $ split '/' (pathOf path)
+lastPathElement path = last $ split '/' (pathOf path)
 
 isAbsolutePath :: Pathy a => a -> Bool
 isAbsolutePath path = (pathOf path) `startsWith` "/"
