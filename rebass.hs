@@ -62,12 +62,12 @@ readCurrentStatus project = do
     remoteStatus <- projectStatus $ remoteProjectFile project
     return (localStatus, remoteStatus)
 
-readCachedStatus :: Project -> IO (ProjectStatus, ProjectStatus)
+readCachedStatus :: Project -> IO (ReaperProjectStatus, ReaperProjectStatus)
 readCachedStatus project = do
     statusFile <- projectStatusFile project 
     readFile statusFile >>= (return . read)
 
-writeStatus :: Project -> (ProjectStatus, ProjectStatus) -> IO ()
+writeStatus :: Project -> (ReaperProjectStatus, ReaperProjectStatus) -> IO ()
 writeStatus project (localStatus, remoteStatus) = do
     statusFile <- projectStatusFile project 
     createRebassDir
@@ -75,7 +75,7 @@ writeStatus project (localStatus, remoteStatus) = do
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show (localStatus, remoteStatus)
 
-projectStatusFile project = statusFileFor $ (remoteAlias project) ++ "." ++ (projectName project) ++ ".status"
+projectStatusFile project = statusFileFor $ (projectName project) ++ ".status"
 
 copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project

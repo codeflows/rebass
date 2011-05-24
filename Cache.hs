@@ -37,7 +37,7 @@ getRemote = remoteConfigFile >>= readFile
 
 createRebassDir = rebassDir >>= (createDirectoryIfMissing True)
 
-rebassDir = getHomeDirectory >>= (returnSubPath ".rebass")
+rebassDir = return ".rebass"
 
 statusFile = rebassDir >>= (returnSubPath "status")
 

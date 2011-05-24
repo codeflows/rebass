@@ -16,16 +16,16 @@ data Sample = Sample { fileName :: String }
 instance Pathy Sample where
     pathOf sample = fileName sample
 
-data ProjectStatus = ProjectStatus { projectFile :: File, projectSamples :: [File] }
+data ReaperProjectStatus = ReaperProjectStatus { projectFile :: File, projectSamples :: [File] }
     deriving (Show, Read, Eq)
 
-projectStatus :: Path -> IO ProjectStatus
-projectStatus projectPath = liftM2 ProjectStatus (readFileStatus projectPath) readProjectSampleStatus
+projectStatus :: Path -> IO ReaperProjectStatus
+projectStatus projectPath = liftM2 ReaperProjectStatus (readFileStatus projectPath) readProjectSampleStatus
     where readProjectSampleStatus = parseProjectFile projectPath >>= projectSampleStatus
           projectSampleStatus = mapM (readFileStatus . (sampleFilePath projectPath)) . samples
             
-projectDiff :: ProjectStatus -> IO [Diff]
-projectDiff (ProjectStatus cachedProject cachedSamples) = do
+projectDiff :: ReaperProjectStatus -> IO [Diff]
+projectDiff (ReaperProjectStatus cachedProject cachedSamples) = do
     newStatus <- projectStatus $ pathOf cachedProject 
     return $ diff (cachedProject : cachedSamples) (projectFile newStatus : projectSamples newStatus) 
 
