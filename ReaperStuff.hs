@@ -23,12 +23,6 @@ projectStatus :: Path -> IO ReaperProjectStatus
 projectStatus projectPath = liftM2 ReaperProjectStatus (readFileStatus projectPath) readProjectSampleStatus
     where readProjectSampleStatus = parseProjectFile projectPath >>= projectSampleStatus
           projectSampleStatus = mapM (readFileStatus . (sampleFilePath projectPath)) . samples
-            
-projectDiff :: ReaperProjectStatus -> IO [Diff]
-projectDiff (ReaperProjectStatus cachedProject cachedSamples) = do
-    newStatus <- projectStatus $ pathOf cachedProject 
-    return $ diff (cachedProject : cachedSamples) (projectFile newStatus : projectSamples newStatus) 
-
 
 samples :: Project -> [Sample]
 samples (Command "FILE" [String fileName]) = [Sample fileName]
