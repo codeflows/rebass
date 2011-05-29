@@ -55,7 +55,7 @@ data RebassProjectStatus = RebassProjectStatus { localStatus :: ReaperProjectSta
 		         remoteStatus :: ReaperProjectStatus }
 		       deriving(Read, Show, Eq)
 
-projectNameFromFileName projectFile = lastPathElement projectFile
+projectNameFromFileName = lastPathElement
 
 defineProject :: String -> String -> IO RebassProject
 defineProject projectFile remoteAlias = do

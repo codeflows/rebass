@@ -14,7 +14,7 @@ updateFiles src dest diffs =
         >> (putStrLn $ "Done")
 
 logAndUpdate src dest diff = do
-    putStrLn $ show diff
+    print diff
     (compressAndUpdate src dest) diff
         
     

@@ -14,7 +14,7 @@ import ReadFiles(readFileStatus)
 
 data Sample = Sample { fileName :: String }
 instance Pathy Sample where
-    pathOf sample = fileName sample
+    pathOf = fileName
 
 data ReaperProjectStatus = ReaperProjectStatus { projectFile :: File, projectSamples :: [File] }
     deriving (Show, Read, Eq)
@@ -26,7 +26,7 @@ projectStatus projectPath = liftM2 ReaperProjectStatus (readFileStatus projectPa
 
 samples :: Project -> [Sample]
 samples (Command "FILE" [String fileName]) = [Sample fileName]
-samples (Container name parameters children) = concat $ map samples children
+samples (Container name parameters children) = concatMap samples children
 samples _ = []
 
 flatten :: Project -> Project

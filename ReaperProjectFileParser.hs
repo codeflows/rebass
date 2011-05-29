@@ -7,13 +7,18 @@ parseProjectFile :: String -> IO Project
 parseProjectFile file = do
   result <- parseFromFile project file
   case result of
-    Right project  -> return project
-    -- TODO: how to handle the Left case?
+    -- TODO proper error handling
+    Left error -> fail (show error)
+    Right project -> return project
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
 
 project :: CharParser st Project
-project = node
+project = do
+  n <- node
+  many anyNewline
+  eof
+  return n
 
 node :: CharParser st Node
 node = do
@@ -42,14 +47,14 @@ name = many1 (letter <|> digit <|> char '_')
 parameters :: CharParser st [Parameter]
 parameters = do
   p <- option [] parameterList
-  newline
+  newlines
   return p
   where
     parameterList = do
       char ' '
       sepBy1 parameter (char ' ')
-    newline =
-      many1 (oneOf "\n\r")
+    newlines =
+      many1 anyNewline
 
 parameter :: CharParser st Parameter
 parameter = decimal <|> integer <|> string' <|> guid <|> identifier
@@ -86,6 +91,9 @@ guid = do
 
 identifier :: CharParser st Parameter
 identifier = fmap String name
+
+anyNewline :: CharParser st Char
+anyNewline = oneOf "\n\r"
 
 between' :: Char -> Char -> CharParser st String
 between' start end = between (char start) (char end) (many $ notChar end)

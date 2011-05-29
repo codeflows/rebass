@@ -26,7 +26,7 @@ readFileStatus root = read root
 
         readDirectoryContents parent paths = sequence $ map read $ map fullPath $ filter realFile $ sort $ paths
             where
-                  realFile path = not $ path `elem` ignored      
+                  realFile path = path `notElem` ignored      
                   fullPath path = parent ++ "/" ++ path
         
         relativePath path = drop ((length root)+1) path
