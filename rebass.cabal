@@ -1,0 +1,16 @@
+Name:                rebass
+Version:             0.0
+Description:         Reaper project sync tool
+License:             GPL
+License-file:        LICENSE.txt
+Author:              Juha Paananen, Jari Aarniala
+Maintainer:          juha.paananen@gmail.com, jari.aarniala@gmail.com
+Build-Type:          Simple
+Cabal-Version:       >=1.2
+Executable rebass
+  Main-is:           rebass.hs
+  Build-Depends:     base >= 3 && < 5, haskell98, 
+                     directory >= 1.0.1.1, parsec >= 2.1.0.1, 
+                     unix >= 2.4.0.2, old-time >= 1.0.0.5,
+                     process >= 1.0.1.3 
+
