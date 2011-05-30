@@ -1,6 +1,6 @@
-module ReaperProjectFileParser (project, parseProjectFile) where
+module Rebass.Reaper.ReaperProjectFileParser (project, parseProjectFile) where
 
-import ReaperProject(Project, Node(Container, Command), Parameter(..))
+import Rebass.Reaper.ReaperProject(Project, Node(Container, Command), Parameter(..))
 import Text.ParserCombinators.Parsec
 
 parseProjectFile :: String -> IO Project

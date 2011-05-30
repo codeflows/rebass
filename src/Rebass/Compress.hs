@@ -1,13 +1,13 @@
-module Compress(compressAndUpdate, compressInto) where
+module Rebass.Compress(compressAndUpdate, compressInto) where
 
-import Diff
-import Path
+import Rebass.Diff
+import Rebass.Path
 import System.Process
 import System.Exit
 import System.Directory(removeFile)
 import List
-import UpdateFile 
-import ListUtil (endsWith, replace)
+import Rebass.UpdateFile 
+import Rebass.ListUtil (endsWith, replace)
 
 compressInto :: Path -> Path -> IO ()
 compressInto src dest = do

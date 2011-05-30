@@ -1,4 +1,4 @@
-module ListUtil where
+module Rebass.ListUtil where
 
 import Data.List
 

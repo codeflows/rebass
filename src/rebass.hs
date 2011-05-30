@@ -1,15 +1,15 @@
-import Status
-import ReadFiles
-import Diff
-import Cache
-import UpdateFiles
-import Compress
-import ReaperStuff
-import ReaperProjectFileParser(parseProjectFile)
-import ReaperProjectFileSerializer(serialize)
+import Rebass.Status
+import Rebass.ReadFiles
+import Rebass.Diff
+import Rebass.Cache
+import Rebass.UpdateFiles
+import Rebass.Compress
+import Rebass.Reaper.ReaperStuff
+import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
+import Rebass.Reaper.ReaperProjectFileSerializer(serialize)
 import System.Environment(getArgs)
 import System.Directory
-import Path(subPath, lastPathElement)
+import Rebass.Path(subPath, lastPathElement)
 
 main = getArgs >>= rebass
 	

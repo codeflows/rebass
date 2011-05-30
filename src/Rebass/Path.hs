@@ -1,9 +1,9 @@
 {-# LANGUAGE TypeSynonymInstances, OverlappingInstances #-}
 
-module Path where
+module Rebass.Path where
 
 import Data.List  
-import ListUtil
+import Rebass.ListUtil
 
 type Path = String   
 

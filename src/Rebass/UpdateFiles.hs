@@ -1,9 +1,9 @@
-module UpdateFiles where
+module Rebass.UpdateFiles where
 
-import Path
-import Diff
-import UpdateFile
-import Compress
+import Rebass.Path
+import Rebass.Diff
+import Rebass.UpdateFile
+import Rebass.Compress
 
 updateFiles :: Path -> Path -> [Diff] -> IO ()
 updateFiles src _ [] =

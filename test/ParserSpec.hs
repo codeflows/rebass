@@ -20,8 +20,8 @@ import qualified Test.HUnit as HUnit
 
 import Text.ParserCombinators.Parsec
 
-import ReaperProject
-import ReaperProjectFileParser
+import Rebass.Reaper.ReaperProject
+import Rebass.Reaper.ReaperProjectFileParser
 
 parserSpecs = describe "Reaper project file parser" [
     it "parses minimal project definition" $

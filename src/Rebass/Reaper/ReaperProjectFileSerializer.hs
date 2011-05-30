@@ -1,6 +1,6 @@
-module ReaperProjectFileSerializer (serialize) where
+module Rebass.Reaper.ReaperProjectFileSerializer (serialize) where
 
-import ReaperProject
+import Rebass.Reaper.ReaperProject
 
 serialize :: Node -> String
 serialize = removeTrailingNewLine . serialize' 0

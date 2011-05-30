@@ -1,6 +1,6 @@
-module Status where
+module Rebass.Status where
                     
-import Path                                 
+import Rebass.Path                                 
 import System.IO
 import System.Time(CalendarTime)
 

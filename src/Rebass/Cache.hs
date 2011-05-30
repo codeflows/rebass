@@ -1,8 +1,8 @@
-module Cache where
+module Rebass.Cache where
 
-import Status
+import Rebass.Status
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
-import Path
+import Rebass.Path
 import Control.Monad(liftM)
 
 saveRemote :: String -> IO String

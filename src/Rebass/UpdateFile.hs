@@ -1,9 +1,9 @@
-module UpdateFile where
+module Rebass.UpdateFile where
 
-import Path
-import Diff
+import Rebass.Path
+import Rebass.Diff
 import System.Directory
-import ReadFiles(handleFileOrDirectory)
+import Rebass.ReadFiles(handleFileOrDirectory)
 
 updateFile src dest (Add file) = copyFile (src `subPath` file) (dest `subPath` file)
 updateFile src dest (MkDir dir) = createDirectoryIfMissing True (dest `subPath` dir)

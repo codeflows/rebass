@@ -1,16 +1,16 @@
-module ReaperStuff where
+module Rebass.Reaper.ReaperStuff where
 
-import Diff(Diff, diff)
-import Path
+import Rebass.Diff(Diff, diff)
+import Rebass.Path
 import System.Directory   
-import Compress(compressInto)  
-import ListUtil(replace)
-import ReaperProject(Project, Node(Command, Container), Parameter(..))
-import ReaperProjectFileParser(parseProjectFile)
+import Rebass.Compress(compressInto)  
+import Rebass.ListUtil(replace)
+import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(..))
+import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 import System.Environment(getArgs)
-import Status(File(RegularFile))
+import Rebass.Status(File(RegularFile))
 import Control.Monad
-import ReadFiles(readFileStatus)
+import Rebass.ReadFiles(readFileStatus)
 
 data Sample = Sample { fileName :: String }
 instance Pathy Sample where

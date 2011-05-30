@@ -1,4 +1,4 @@
-module ReaperProject (
+module Rebass.Reaper.ReaperProject (
   Project,
   Node(Container, Command),
   Parameter(..)

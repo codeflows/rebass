@@ -1,5 +1,5 @@
-import ReaperProjectFileParser
-import ReaperProjectFileSerializer
+import Rebass.Reaper.ReaperProjectFileParser
+import Rebass.Reaper.ReaperProjectFileSerializer
 import System.Environment(getArgs)
 import Text.ParserCombinators.Parsec(parseFromFile)
 

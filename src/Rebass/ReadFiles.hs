@@ -1,7 +1,7 @@
-module ReadFiles (readFileStatus, handleFileOrDirectory) where
+module Rebass.ReadFiles (readFileStatus, handleFileOrDirectory) where
                              
-import Status
-import Path
+import Rebass.Status
+import Rebass.Path
 import System.Time(ClockTime, toCalendarTime)
 import System.Directory(getDirectoryContents, doesDirectoryExist, getModificationTime)
 import System.Posix.Files(getFileStatus, fileSize)                                                              

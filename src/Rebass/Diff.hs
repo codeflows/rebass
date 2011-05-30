@@ -1,13 +1,13 @@
-module Diff (Diff (Add, MkDir, Rm, Update), diff, getConflicts) where
+module Rebass.Diff (Diff (Add, MkDir, Rm, Update), diff, getConflicts) where
 
-import Status
-import Path
+import Rebass.Status
+import Rebass.Path
 
 data Diff = Add { path :: Path } | MkDir { path :: Path } | Rm { path :: Path } | Update { path :: Path }
     deriving (Show, Read)
     
 instance Pathy Diff where
-    pathOf = Diff.path
+    pathOf = Rebass.Diff.path
 
 diff :: [File] -> [File] -> [Diff]       
 diff [] [] = []
