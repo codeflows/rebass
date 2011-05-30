@@ -1,14 +1,7 @@
 module Rebass.RebassProject where
 
-import Rebass.FileStatus
 import Rebass.Cache
-import Rebass.Reaper.Samples
-import Rebass.Reaper.Flatten
 import Rebass.Reaper.ReaperProjectStatus
-import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
-import Rebass.Reaper.ReaperProjectFileSerializer(serialize)
-import System.Environment(getArgs)
-import System.Directory
 import Rebass.Path(subPath, lastPathElement)
 
 data RebassProject = RebassProject { projectName :: String, 
