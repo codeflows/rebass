@@ -4,7 +4,8 @@ import Rebass.Diff
 import Rebass.Cache
 import Rebass.UpdateFiles
 import Rebass.Compress
-import Rebass.Reaper.ReaperStuff
+import Rebass.Reaper.Samples
+import Rebass.Reaper.ReaperProjectSync
 import Rebass.Reaper.ReaperProjectStatus
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 import Rebass.Reaper.ReaperProjectFileSerializer(serialize)

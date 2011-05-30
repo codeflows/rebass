@@ -1,4 +1,4 @@
-module Rebass.Reaper.ReaperStuff(samples, sampleFilePath) where
+module Rebass.Reaper.Samples(Sample(..), samples, sampleFilePath) where
 
 import Rebass.Diff(Diff, diff)
 import Rebass.Path

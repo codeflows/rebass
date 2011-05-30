@@ -3,7 +3,7 @@ module Rebass.Reaper.ReaperProjectStatus(ReaperProjectStatus, projectStatus) whe
 import Rebass.Path
 import System.Directory   
 import Rebass.ListUtil(replace)
-import Rebass.Reaper.ReaperStuff(samples, sampleFilePath)
+import Rebass.Reaper.Samples(samples, sampleFilePath)
 import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(..))
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 import System.Environment(getArgs)
