@@ -1,16 +1,10 @@
-module Rebass.Cache where
+module Rebass.Cache(readCachedStatus, writeStatus) where
 
 import Rebass.RebassProject
 import Rebass.FileStatus
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
 import Rebass.Path
 import Control.Monad(liftM)
-
-statusFileFor name = fmap (`subPath` name) rebassDir
-	
-createRebassDir = rebassDir >>= createDirectoryIfMissing True
-
-rebassDir = return ".rebass"
 
 readCachedStatus :: String -> IO RebassProjectStatus
 readCachedStatus projectName = do
@@ -23,5 +17,9 @@ writeStatus project status = do
     createRebassDir
     putStrLn $ "Using status file " ++ statusFile
     writeFile statusFile $ show status 
+  where createRebassDir = rebassDir >>= createDirectoryIfMissing True
 
 projectStatusFile projectName = statusFileFor $ projectName ++ ".status"
+  where statusFileFor name = fmap (`subPath` name) rebassDir
+
+rebassDir = return ".rebass"
