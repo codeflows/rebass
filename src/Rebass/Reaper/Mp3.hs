@@ -1,4 +1,4 @@
-module Rebass.Compress(compressInto) where
+module Rebass.Reaper.Mp3(compressInto) where
 
 import Rebass.Path
 import System.Process

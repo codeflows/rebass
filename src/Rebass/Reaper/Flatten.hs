@@ -2,7 +2,7 @@ module Rebass.Reaper.Flatten(flatten, flattenSamples) where
 
 import Rebass.Path
 import System.Directory(doesFileExist)   
-import Rebass.Compress(compressInto)  
+import Rebass.Reaper.Mp3(compressInto)  
 import Rebass.ListUtil(replace)
 import Rebass.Reaper.Samples
 import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(..))
