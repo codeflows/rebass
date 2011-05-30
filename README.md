@@ -8,9 +8,9 @@ Uses LAME for mp3 encoding.
 Installation (OSX)
 ------------------
 
-brew install ghc haskell-platform lame
-cabal update
-cabal install
+- brew install ghc haskell-platform lame
+- cabal update
+- cabal install
 
 Try it out
 ---------- 
