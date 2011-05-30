@@ -1,1 +1,1 @@
-runhaskell rebass.hs $@
+runhaskell -isrc src/rebass.hs $@

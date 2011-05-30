@@ -9,6 +9,7 @@ Build-Type:          Simple
 Cabal-Version:       >=1.2
 Executable rebass
   Main-is:           rebass.hs
+  hs-source-dirs:    src
   Build-Depends:     base >= 3 && < 5, haskell98, 
                      directory >= 1.0.1.1, parsec >= 2.1.0.1, 
                      unix >= 2.4.0.2, old-time >= 1.0.0.5,
