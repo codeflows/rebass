@@ -1,4 +1,4 @@
-module Rebass.Reaper.ReaperProjectSync(flatten, flattenSamples) where
+module Rebass.Reaper.Flatten(flatten, flattenSamples) where
 
 import Rebass.Path
 import System.Directory(doesFileExist)   
