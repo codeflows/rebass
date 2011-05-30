@@ -1,4 +1,4 @@
-import Rebass.Status
+import Rebass.FileStatus
 import Rebass.Cache
 import Rebass.Reaper.Samples
 import Rebass.Reaper.Flatten

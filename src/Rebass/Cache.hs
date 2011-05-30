@@ -1,6 +1,6 @@
 module Rebass.Cache where
 
-import Rebass.Status
+import Rebass.FileStatus
 import System.Directory(createDirectoryIfMissing, getHomeDirectory)
 import Rebass.Path
 import Control.Monad(liftM)

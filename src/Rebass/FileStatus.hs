@@ -1,4 +1,4 @@
-module Rebass.Status where
+module Rebass.FileStatus where
                     
 import Rebass.Path                                 
 import System.IO

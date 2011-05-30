@@ -7,7 +7,7 @@ import Rebass.Reaper.Samples(samples, sampleFilePath)
 import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(..))
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 import System.Environment(getArgs)
-import Rebass.Status(File(RegularFile), readFileStatus)
+import Rebass.FileStatus(File(RegularFile), readFileStatus)
 import Control.Monad
 
 data ReaperProjectStatus = ReaperProjectStatus { projectFile :: File, projectSamples :: [File] }
