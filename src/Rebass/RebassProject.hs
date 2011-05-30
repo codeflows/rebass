@@ -1,8 +1,8 @@
 module Rebass.RebassProject where
 
-import Rebass.Cache
 import Rebass.Reaper.ReaperProjectStatus
 import Rebass.Path(subPath, lastPathElement)
+import System.Directory(getHomeDirectory)
 
 data RebassProject = RebassProject { projectName :: String, 
 	                 localProjectFile :: String,
@@ -29,16 +29,7 @@ readCurrentStatus project = do
     remoteStatus <- projectStatus $ remoteProjectFile project
     return $ RebassProjectStatus localStatus (remoteAlias project) remoteStatus
 
-readCachedStatus :: String -> IO RebassProjectStatus
-readCachedStatus projectName = do
-    statusFile <- projectStatusFile projectName
-    readFile statusFile >>= (return . read)
+remoteLocationFor name = do
+    home <- getHomeDirectory
+    return $ home ++ "/Dropbox/Rebass/" ++ name
 
-writeStatus :: RebassProject -> RebassProjectStatus -> IO ()
-writeStatus project status = do
-    statusFile <- projectStatusFile $ projectName project 
-    createRebassDir
-    putStrLn $ "Using status file " ++ statusFile
-    writeFile statusFile $ show status 
-
-projectStatusFile projectName = statusFileFor $ projectName ++ ".status"
