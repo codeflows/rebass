@@ -5,6 +5,7 @@ import Rebass.Cache
 import Rebass.UpdateFiles
 import Rebass.Compress
 import Rebass.Reaper.ReaperStuff
+import Rebass.Reaper.ReaperProjectStatus
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 import Rebass.Reaper.ReaperProjectFileSerializer(serialize)
 import System.Environment(getArgs)

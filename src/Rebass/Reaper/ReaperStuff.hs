@@ -1,4 +1,4 @@
-module Rebass.Reaper.ReaperStuff where
+module Rebass.Reaper.ReaperStuff(samples, flatten, flattenSamples, sampleFilePath) where
 
 import Rebass.Diff(Diff, diff)
 import Rebass.Path
@@ -15,14 +15,6 @@ import Rebass.ReadFiles(readFileStatus)
 data Sample = Sample { fileName :: String }
 instance Pathy Sample where
     pathOf = fileName
-
-data ReaperProjectStatus = ReaperProjectStatus { projectFile :: File, projectSamples :: [File] }
-    deriving (Show, Read, Eq)
-
-projectStatus :: Path -> IO ReaperProjectStatus
-projectStatus projectPath = liftM2 ReaperProjectStatus (readFileStatus projectPath) readProjectSampleStatus
-    where readProjectSampleStatus = parseProjectFile projectPath >>= projectSampleStatus
-          projectSampleStatus = mapM (readFileStatus . (sampleFilePath projectPath)) . samples
 
 samples :: Project -> [Sample]
 samples (Command "FILE" [String fileName]) = [Sample fileName]
