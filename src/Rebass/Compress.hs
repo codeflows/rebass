@@ -5,7 +5,7 @@ import Rebass.Path
 import System.Process
 import System.Exit
 import System.Directory(removeFile)
-import List
+import Data.List
 import Rebass.UpdateFile 
 import Rebass.ListUtil (endsWith, replace)
 

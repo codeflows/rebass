@@ -22,20 +22,20 @@ diff (old:olds) (new:news)
 
 findAdded :: File -> [Diff]
 findAdded (RegularFile path _) = [Add path]
-findAdded (Directory path contents) = MkDir path : (concatMap findAdded contents)
+findAdded (Directory path contents) = MkDir path : concatMap findAdded contents
 
 compareFile :: File -> File -> [Diff]
-compareFile (RegularFile path _) new@(Directory _ _) = [Rm path] ++ findAdded new
-compareFile (Directory path _) new@(RegularFile _ _) = [Rm path] ++ findAdded new   
+compareFile (RegularFile path _) new@(Directory _ _) = Rm path : findAdded new
+compareFile (Directory path _) new@(RegularFile _ _) = Rm path : findAdded new   
 compareFile (RegularFile path oldStatus) (RegularFile _ newStatus) 
-    | (oldStatus == newStatus) = []
+    | oldStatus == newStatus   = []
     | otherwise                = [Update path]
 compareFile (Directory _ oldContents) new@(Directory _ newContents) 
     = diff oldContents newContents
     
 getConflicts :: ([Diff], [Diff]) -> [(Diff, Diff)]
 getConflicts (local, remote) = filter isConflict [(a, b) | a <- local, b <- remote]
-    where isConflict ((Rm _), (Rm _)) = False
+    where isConflict (Rm _, Rm _) = False
           isConflict (a, b) 
                             | b `parentOf` a  = True
                             | a `parentOf` b  = True

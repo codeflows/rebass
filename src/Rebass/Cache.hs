@@ -19,16 +19,16 @@ remoteLocationFor name = do
     home <- getHomeDirectory
     return $ home ++ "/Dropbox/Rebass/" ++ name
     
-statusFileFor name = rebassDir >>= (returnSubPath name)    
+statusFileFor name = rebassDir >>= returnSubPath name
 	
 getRemote = remoteConfigFile >>= readFile	
 
-createRebassDir = rebassDir >>= (createDirectoryIfMissing True)
+createRebassDir = rebassDir >>= createDirectoryIfMissing True
 
 rebassDir = return ".rebass"
 
-statusFile = rebassDir >>= (returnSubPath "status")
+statusFile = rebassDir >>= returnSubPath "status"
 
-remoteConfigFile = rebassDir >>= (returnSubPath "remote")
+remoteConfigFile = rebassDir >>= returnSubPath "remote"
 
 returnSubPath file dir = return $ dir `subPath` file

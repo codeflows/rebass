@@ -22,7 +22,7 @@ rebass ["init", projectFile, remoteAlias] = do
     copyToRemote project
     status <- readCurrentStatus project
     writeStatus project status 
-    putStrLn $ "Rebass initialized." 
+    putStrLn "Rebass initialized." 
 
 rebass ["update", projectFile] = do
     cachedStatus <- readCachedStatus $ projectNameFromFileName projectFile
@@ -31,14 +31,14 @@ rebass ["update", projectFile] = do
     let remoteChanged = (remoteStatus cachedStatus /= remoteStatus currentStatus)
     let localChanged = (localStatus cachedStatus /= localStatus currentStatus)
     if remoteChanged
-        then putStrLn $ "Remote project changed. Update not implemented yet."
+        then putStrLn "Remote project changed. Update not implemented yet."
         else if localChanged
             then do 
-              putStrLn $ "Local changes detected. Updating."
+              putStrLn "Local changes detected. Updating."
               copyToRemote project
               writeStatus project currentStatus
-              putStrLn $ "Up to date."
-            else putStrLn $ "Already up to date."    
+              putStrLn "Up to date."
+            else putStrLn "Already up to date."    
 
 rebass _ = do
   putStrLn "USAGE:"
@@ -88,6 +88,6 @@ projectStatusFile projectName = statusFileFor $ projectName ++ ".status"
 copyToRemote project = do
     createDirectoryIfMissing True $ remoteLocation project
     flattenSamples (localProjectFile project) $ remoteLocation	project
-    parseProjectFile (localProjectFile project) >>= (writeFile $ remoteProjectFile project) . serialize . flatten
-    putStrLn $ "Wrote project to " ++ (remoteLocation project)
+    parseProjectFile (localProjectFile project) >>= writeFile (remoteProjectFile project) . serialize . flatten
+    putStrLn $ "Wrote project to " ++ remoteLocation project
 
