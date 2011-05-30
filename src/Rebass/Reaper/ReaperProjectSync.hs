@@ -1,17 +1,12 @@
 module Rebass.Reaper.ReaperProjectSync(flatten, flattenSamples) where
 
-import Rebass.Diff(Diff, diff)
 import Rebass.Path
-import System.Directory   
+import System.Directory(doesFileExist)   
 import Rebass.Compress(compressInto)  
 import Rebass.ListUtil(replace)
 import Rebass.Reaper.Samples
 import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(..))
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
-import System.Environment(getArgs)
-import Rebass.Status(File(RegularFile))
-import Control.Monad
-import Rebass.ReadFiles(readFileStatus)
 
 flatten :: Project -> Project
 flatten (Command "FILE" [String fileName]) = Command "FILE" [String (replace ".wav" ".mp3" $ lastPathElement fileName)]
