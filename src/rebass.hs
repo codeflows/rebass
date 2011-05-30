@@ -2,7 +2,6 @@ import Rebass.Status
 import Rebass.ReadFiles
 import Rebass.Diff
 import Rebass.Cache
-import Rebass.UpdateFiles
 import Rebass.Compress
 import Rebass.Reaper.Samples
 import Rebass.Reaper.Flatten
