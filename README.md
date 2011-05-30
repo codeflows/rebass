@@ -10,7 +10,7 @@ Installation (OSX)
 
 brew install ghc haskell-platform lame
 cabal update
-cabal install MissingH hspec
+cabal install
 
 Try it out
 ---------- 
