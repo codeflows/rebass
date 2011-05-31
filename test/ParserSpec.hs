@@ -12,7 +12,7 @@
  -      >
  -}
 
-module ParserSpec where
+module Main where
 
 import Test.Hspec
 import Test.Hspec.HUnit ()
