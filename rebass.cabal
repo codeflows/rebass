@@ -19,6 +19,8 @@ Executable rebass
 
 -- http://cabaltest.blogspot.com/
 -- http://www.haskell.org/cabal/release/cabal-1.10.1.0/doc/users-guide/#test-suites
+-- http://www.galois.com/~dons/talks/hiw-2010/tuegel-cabal-test.pdf
+-- "detailed" test runner doesn't work yet:
 -- http://www.haskell.org/pipermail/cabal-devel/2011-March/007326.html
 test-suite parser-tests
   Type:             exitcode-stdio-1.0
