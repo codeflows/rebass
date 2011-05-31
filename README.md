@@ -15,7 +15,8 @@ Installation (OSX)
 Try it out
 ---------- 
 
-./rebass
+- export PATH=$PATH:~/.cabal/bin
+- rebass
 
 Backlog
 -------
