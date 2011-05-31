@@ -22,5 +22,5 @@ test-suite parser-tests
   Type:             exitcode-stdio-1.0
   Main-Is:          ParserSpec.hs
   Hs-Source-Dirs:   src test
-  Build-Depends:    HUnit, hspec, haskell2010,
+  Build-Depends:    HUnit, hspec >= 0.3, haskell2010,
                     parsec >= 2.1.0.1
