@@ -15,8 +15,3 @@ Executable rebass
                      directory >= 1.0.1.1, parsec >= 2.1.0.1, 
                      unix >= 2.4.0.2, old-time >= 1.0.0.5,
                      process >= 1.0.1.3 
-
---test-suite parser-tests
---    type: exitcode-stdio-1.0
---    main-is: ParserSpec.hs
---    hs-source-dirs: test
