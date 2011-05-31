@@ -16,6 +16,8 @@ Executable rebass
                      unix >= 2.4.0.2, old-time >= 1.0.0.5,
                      process >= 1.0.1.3 
 
+-- http://cabaltest.blogspot.com/
+-- http://www.haskell.org/cabal/release/cabal-1.10.1.0/doc/users-guide/#test-suites
 test-suite parser-tests
   Type:             exitcode-stdio-1.0
   Main-Is:          ParserSpec.hs
