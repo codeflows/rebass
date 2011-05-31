@@ -11,6 +11,7 @@ Cabal-Version:       >=1.10
 Executable rebass
   Main-Is:           rebass.hs
   Hs-Source-Dirs:    src
+  Default-Language:  Haskell98
   Build-Depends:     base >= 3 && < 5, haskell98, 
                      directory >= 1.0.1.1, parsec >= 2.1.0.1, 
                      unix >= 2.4.0.2, old-time >= 1.0.0.5,
@@ -22,5 +23,6 @@ test-suite parser-tests
   Type:             exitcode-stdio-1.0
   Main-Is:          ParserSpec.hs
   Hs-Source-Dirs:   src test
+  Default-Language: Haskell98
   Build-Depends:    HUnit, hspec >= 0.3, haskell2010,
                     parsec >= 2.1.0.1
