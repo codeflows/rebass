@@ -22,6 +22,4 @@ Backlog
 
 - Modify Reaper project file, converting wav references to mp3 ones
 - Collect media files listed in project file into one location
-- Add makefile and packaging
 - Acceptance tests: parse -> serialize -> compare to original for actual Reaper project files
-- Split stuff under src/ and test/
