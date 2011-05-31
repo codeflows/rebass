@@ -134,4 +134,4 @@ parseProject :: String -> Either ParseError Node
 parseProject = parse project "(no source file)"
 
 main :: IO()
-main = hspec parserSpecs
+main = hspecX parserSpecs
