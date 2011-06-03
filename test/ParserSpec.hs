@@ -96,7 +96,7 @@ parserSpecs = describe "Reaper project file parser" [
       "<REAPER_PROJECT -10\n>" `shouldParseInto` reaperProjectHeader [Integer (-10)] [],
 
     it "consumes all input" $
-      shouldFail "<REAPER_PROJECT -10\n><hallo>"
+      parsingShouldFailFor "<REAPER_PROJECT -10\n><hallo>"
   ]
 
 projectDefinitionWithManyCommands =
@@ -123,11 +123,10 @@ shouldParseInto input expected =
     Left error -> HUnit.assertFailure $ show error
     Right node -> HUnit.assertEqual "parse result" expected node
 
-shouldFail :: String -> HUnit.Assertion
-shouldFail input =
+parsingShouldFailFor :: String -> HUnit.Assertion
+parsingShouldFailFor input =
   case parseProject input of
-    -- TODO how to "assert success" i.e. just return OK?
-    Left error -> HUnit.assertBool "Lol" True
+    Left error -> return ()
     Right node -> HUnit.assertFailure "Parsing should have failed"
 
 parseProject :: String -> Either ParseError Node
