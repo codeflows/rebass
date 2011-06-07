@@ -1,3 +1,5 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 import Rebass.RebassProject
 import Rebass.FileStatus
 import Rebass.Cache
@@ -9,8 +11,14 @@ import Rebass.Reaper.ReaperProjectFileSerializer(serialize)
 import System.Environment(getArgs)
 import System.Directory
 import Rebass.Path(subPath, lastPathElement)
+import Control.Exception
+import Prelude hiding (catch)
 
-main = getArgs >>= rebass
+main = getArgs >>= rebassWithErrorHandling
+
+rebassWithErrorHandling args = catch (rebass args) (\ (e :: IOException) -> logError e)
+
+logError e = putStrLn $ "Error occurred: " ++ show e
 	
 rebass :: [String] -> IO ()	
 
