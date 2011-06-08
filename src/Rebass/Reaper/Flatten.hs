@@ -9,7 +9,7 @@ import Rebass.Reaper.ReaperProject(Project, Node(Command, Container), Parameter(
 import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
 
 flatten :: Project -> Project
-flatten (Command "FILE" [String fileName]) = Command "FILE" [String (replace ".wav" ".mp3" $ lastPathElement fileName)]
+flatten (Container "SOURCE" [String "WAVE"] [Command "FILE" [String fileName]]) = Container "SOURCE" [String "MP3"] [Command "FILE" [String (replace ".wav" ".mp3" $ lastPathElement fileName)]]
 flatten l@(Command _ _) = l
 flatten (Container name parameters children) = Container name parameters (map flatten children)
           
