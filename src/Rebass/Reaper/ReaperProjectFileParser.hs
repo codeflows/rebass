@@ -1,17 +1,24 @@
-module Rebass.Reaper.ReaperProjectFileParser (project, parseProjectFile) where
+{-# LANGUAGE DeriveDataTypeable #-}
+module Rebass.Reaper.ReaperProjectFileParser (project, parseProjectFile, ReaperParseException) where
 
 import Rebass.Reaper.ReaperProject(Project, Node(Container, Command), Parameter(..))
 import Text.ParserCombinators.Parsec
+import Control.Exception hiding (try)
+import Data.Typeable
 
 parseProjectFile :: String -> IO Project
 parseProjectFile file = do
   result <- parseFromFile project file
   case result of
-    -- TODO proper error handling
-    Left error -> fail (show error)
+    Left error -> throw $ ReaperParseException (show error)
     Right project -> return project
 
 data NameAndParameters = NameAndParameters { name' :: String, parameters' :: [Parameter] }
+
+data ReaperParseException = ReaperParseException String
+  deriving (Show, Typeable)
+
+instance Exception ReaperParseException 
 
 project :: CharParser st Project
 project = do

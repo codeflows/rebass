@@ -6,7 +6,7 @@ import Rebass.Cache
 import Rebass.Reaper.Samples
 import Rebass.Reaper.Flatten
 import Rebass.Reaper.ReaperProjectStatus
-import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile)
+import Rebass.Reaper.ReaperProjectFileParser(parseProjectFile, ReaperParseException)
 import Rebass.Reaper.ReaperProjectFileSerializer(serialize)
 import System.Environment(getArgs)
 import System.Directory
@@ -16,9 +16,10 @@ import Prelude hiding (catch)
 
 main = getArgs >>= rebassWithErrorHandling
 
-rebassWithErrorHandling args = catch (rebass args) (\ (e :: IOException) -> logError e)
-
-logError e = putStrLn $ "Error occurred: " ++ show e
+rebassWithErrorHandling args = (rebass args) 
+  `catches` [Handler(\ (e :: IOException) -> logError "IO error" e),
+             Handler(\ (e :: ReaperParseException) -> logError "Parsing error" e)]
+logError kind ex = putStrLn $ kind ++ " : " ++ show ex
 	
 rebass :: [String] -> IO ()	
 
