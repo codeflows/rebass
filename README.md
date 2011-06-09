@@ -22,5 +22,5 @@ Backlog
 -------
 
 - Merge remote changes back to local project
-- Test with a real-life project
+- Parse binary stuff, as in examples/RealLifeProject.RPP
 - Acceptance tests: parse -> serialize -> compare to original for actual Reaper project files
