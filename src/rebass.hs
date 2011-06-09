@@ -19,7 +19,7 @@ main = getArgs >>= rebassWithErrorHandling
 rebassWithErrorHandling args = (rebass args) 
   `catches` [Handler(\ (e :: IOException) -> logError "IO error" e),
              Handler(\ (e :: ReaperParseException) -> logError "Parsing error" e)]
-logError kind ex = putStrLn $ kind ++ " : " ++ show ex
+  where logError kind ex = putStrLn $ kind ++ " : " ++ show ex
 	
 rebass :: [String] -> IO ()	
 
