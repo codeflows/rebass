@@ -1,9 +1,16 @@
 Rebass
 ======
 
-File sync tool  for music projects with automatic bandwidth saving.. It's in the works.
+File sync tool for Reaper music projects:
+- "rebass init lol.RPP lol" copies your project to a directory under ~/Dropbox/lol
+- It copies also all of the project samples to the same directory, with
+  MP3 compression
+- "rebass update lol.RPP" updates your changes to the project into the Dropbox location
+  (the location was stored by "init" command)
+- TODO: rebass import for importing a project from Dropbox
+- TODO: rebass update to support pulling remote changes from Dropbox
 
-Uses LAME for mp3 encoding.
+Written entirely in Haskell. Uses LAME for mp3 encoding.
 
 Installation (OSX)
 ------------------
