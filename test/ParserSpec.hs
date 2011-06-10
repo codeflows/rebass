@@ -98,10 +98,9 @@ parserSpecs = describe "Reaper project file parser" [
     it "consumes all input" $
       parsingShouldFailFor "<REAPER_PROJECT -10\n><hallo>",
 
-    -- TODO new Node type for data chunk?
     it "parses containers with data chunks" $
       "<RENDER_CFG\nbDNwbcAAAAABAAAA//////////8EAAAAwAAAAAAAAAA=\n>" `shouldParseInto`
-        Container "RENDER_CFG" [] [],
+        Container "RENDER_CFG" [] [Chunk "nbDNwbcAAAAABAAAA//////////8EAAAAwAAAAAAAAAA="],
 
     it "parses containers with parameters and data chunks" $
       ("<VST 'VST: ReaVerb (Cockos)' 'reaverb.vst.dylib' 0 ''\n" ++
@@ -110,7 +109,13 @@ parserSpecs = describe "Reaper project file parser" [
        " AACAP6rxkj4AAAAARUNIT0dFTgAcAAAAKUyUQhDdZkSu6PJAKc4xPw==\n" ++
        " Q9LPOwZGZ0AAAAA/RUNIT0dFTgAcAAAAAACgQQAAIEIAAPBBVUJ/Pw==\n" ++
        " bxZsPwAAAAAAAAA/RklMVAAIAAAAW3tJPolA5Ds=\n>") `shouldParseInto`
-        Container "VST" [] []
+        Container "VST"
+          [String "VST: ReaVerb (Cockos)", String "reaverb.vst.dylib", Integer 0, String ""]
+          [Chunk ("YnZlcu5e7f4CAAAAAQAAAAAAAAACAAAAAAAAAAIAAAABAAAAAAAAAA==\n" ++
+                  "AgAAAAAAAACBAAAAAQAAAAAAAAAAAODAtvNuPgAAgD8AAAAAAACAPw==\n" ++
+                  "AACAP6rxkj4AAAAARUNIT0dFTgAcAAAAKUyUQhDdZkSu6PJAKc4xPw==\n" ++
+                  "Q9LPOwZGZ0AAAAA/RUNIT0dFTgAcAAAAAACgQQAAIEIAAPBBVUJ/Pw==\n" ++
+                  "bxZsPwAAAAAAAAA/RklMVAAIAAAAW3tJPolA5Ds=")]
   ]
 
 projectDefinitionWithManyCommands =
