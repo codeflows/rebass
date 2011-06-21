@@ -1,10 +1,11 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 module Rebass.Reaper.ReaperProjectFileParser (project, parseProjectFile, ReaperParseException) where
 
-import Rebass.Reaper.ReaperProject(Project, Node(Container, Command), Parameter(..))
+import Rebass.Reaper.ReaperProject(Project, Node(Container, Command, Chunk), Parameter(..))
 import Text.ParserCombinators.Parsec
 import Control.Exception hiding (try)
 import Data.Typeable
+import Data.List(intersperse)
 
 parseProjectFile :: String -> IO Project
 parseProjectFile file = do
@@ -43,7 +44,23 @@ nameAndParameters = do
   return $ NameAndParameters n p
 
 children :: CharParser st [Node]
-children = endBy (node <|> command) spaces
+children = (node <|> command <|> chunk) `endBy` spaces
+
+chunk :: CharParser st Node
+chunk = do
+  lines <- chunkLines
+  return $ Chunk $ concat $ intersperse "\n" lines
+
+chunkLines :: CharParser st [String]
+chunkLines = (fullChunk <|> endChunk) `endBy1` spaces
+
+fullChunk :: CharParser st String
+fullChunk = chunkWithEnd "=="
+
+endChunk :: CharParser st String
+endChunk = chunkWithEnd "="
+
+chunkWithEnd end = (alphaNum <|> char '/') `endBy1` (string end)
 
 command :: CharParser st Node
 command = fmap (Command `withNameAndParameters`) nameAndParameters
