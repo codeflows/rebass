@@ -47,19 +47,11 @@ children :: CharParser st [Node]
 children = (node <|> command <|> chunk) `endBy` spaces
 
 chunk :: CharParser st Node
-chunk = do
-  lines <- chunkLines
-  return $ Chunk $ concat $ intersperse "\n" lines
+chunk = chunkLines >>= return . Chunk . concat . (intersperse "\n") 
 
-chunkLines :: CharParser st [String]
 chunkLines = (fullChunk <|> endChunk) `endBy1` spaces
-
-fullChunk :: CharParser st String
 fullChunk = chunkWithEnd "=="
-
-endChunk :: CharParser st String
 endChunk = chunkWithEnd "="
-
 chunkWithEnd end = (alphaNum <|> char '/') `endBy1` (string end)
 
 command :: CharParser st Node
